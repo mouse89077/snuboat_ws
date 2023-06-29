@@ -1,0 +1,13 @@
+time,stamp,level,name,msg,file,function,line
+2023/06/27 10:51:25.969607961,"{'secs': 1687830685, 'nsecs': 964777089}",20,rosbag2_recorder,Press SPACE for pausing/resuming,./src/rosbag2_transport/recorder.cpp,Recorder,98
+2023/06/27 10:51:25.969617133,"{'secs': 1687830685, 'nsecs': 965799808}",20,rosbag2_recorder,Event publisher thread: Starting,./src/rosbag2_transport/recorder.cpp,event_publisher_thread_main,181
+2023/06/27 10:51:25.969622279,"{'secs': 1687830685, 'nsecs': 966460824}",20,rosbag2_recorder,Listening for topics...,./src/rosbag2_transport/recorder.cpp,record,170
+2023/06/27 10:51:25.969627104,"{'secs': 1687830685, 'nsecs': 967230609}",20,rosbag2_recorder,Subscribed to topic '/rosout',./src/rosbag2_transport/recorder.cpp,subscribe_topic,309
+2023/06/27 10:51:25.969631797,"{'secs': 1687830685, 'nsecs': 967555736}",20,rosbag2_recorder,Subscribed to topic '/parameter_events',./src/rosbag2_transport/recorder.cpp,subscribe_topic,309
+2023/06/27 10:51:25.969636420,"{'secs': 1687830685, 'nsecs': 968692216}",20,rosbag2_recorder,Subscribed to topic '/TS/gps/lon',./src/rosbag2_transport/recorder.cpp,subscribe_topic,309
+2023/06/27 10:51:25.969641037,"{'secs': 1687830685, 'nsecs': 968909202}",20,rosbag2_recorder,Subscribed to topic '/TS/gps/lat',./src/rosbag2_transport/recorder.cpp,subscribe_topic,309
+2023/06/27 10:51:25.969645783,"{'secs': 1687830685, 'nsecs': 969123690}",20,rosbag2_recorder,Subscribed to topic '/OS/gps/lon',./src/rosbag2_transport/recorder.cpp,subscribe_topic,309
+2023/06/27 10:51:25.969650374,"{'secs': 1687830685, 'nsecs': 969343036}",20,rosbag2_recorder,Subscribed to topic '/events/write_split',./src/rosbag2_transport/recorder.cpp,subscribe_topic,309
+2023/06/27 10:51:25.969655988,"{'secs': 1687830685, 'nsecs': 969540539}",20,rosbag2_recorder,Subscribed to topic '/OS/gps/lat',./src/rosbag2_transport/recorder.cpp,subscribe_topic,309
+2023/06/27 10:51:25.970945689,"{'secs': 1687830685, 'nsecs': 970894051}",20,rosbag2_recorder,Subscribed to topic '/OS/enu_pos',./src/rosbag2_transport/recorder.cpp,subscribe_topic,309
+2023/06/27 10:51:25.971143384,"{'secs': 1687830685, 'nsecs': 971131151}",20,rosbag2_recorder,Subscribed to topic '/TS/enu_pos',./src/rosbag2_transport/recorder.cpp,subscribe_topic,309

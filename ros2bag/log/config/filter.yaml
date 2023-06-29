@@ -1,0 +1,5 @@
+topics:
+  - {remap: '/gps/lat', to: '/TS/gps/lat'}
+  - {remap: '/gps/lon', to: '/TS/gps/lon'}
+  
+
