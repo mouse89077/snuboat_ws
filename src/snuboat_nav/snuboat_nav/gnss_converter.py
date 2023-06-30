@@ -6,6 +6,7 @@ from rclpy.node import Node
 from geometry_msgs.msg import Point
 from std_msgs.msg import String
 import pymap3d as pm
+import numpy as np
 
 class GNSSConverter(Node):
     def __init__(self):
@@ -37,6 +38,8 @@ class GNSSConverter(Node):
         
         self.enu_pos_pub = self.create_publisher(Point, '/enu_pos', 1)
         self.OS_timer = self.create_timer(0.1, self.pub_enu_pos)
+
+        self.enu_pos_log_pub = self.create_publisher(String, '/log/enu_pos', 1)
 
         self.gps_lon_received = False
         self.gps_lat_received = False
@@ -75,6 +78,10 @@ class GNSSConverter(Node):
             enu_pos.x = self.pos[0]
             enu_pos.y = self.pos[1]
             self.enu_pos_pub.publish(enu_pos)
+            
+            enu_pos_log = String()
+            enu_pos_log.data = np.append(str(self.pos[0]), "*", str(self.pos[1]))
+            self.enu_pos_log_pub.publish(enu_pos_log)
 
 def main(args=None):
     rclpy.init(args=args)

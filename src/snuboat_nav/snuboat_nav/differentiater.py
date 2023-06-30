@@ -4,7 +4,7 @@ import os
 import yaml
 from rclpy.node import Node
 from geometry_msgs.msg import Point
-from std_msgs.msg import Float64
+from std_msgs.msg import Float64, String
 import numpy as np
 
 class Differentiater(Node):
@@ -29,6 +29,10 @@ class Differentiater(Node):
 
         self.OS_spd_pub = self.create_publisher(Float64, '/spd', 1)
         self.OS_heading_pub = self.create_publisher(Float64, '/heading', 1)
+
+        # for log 
+        self.OS_spd_log_pub = self.create_publisher(String, '/log/spd', 1)
+        self.OS_heading_log_pub = self.create_publisher(String, '/log/heading', 1)
 
         self.OS_timer = self.create_timer(self.dt, self.OS_pub)
 
@@ -71,6 +75,14 @@ class Differentiater(Node):
 
         self.OS_spd_pub.publish(temp_spd)
         self.OS_heading_pub.publish(temp_heading)
+
+        # publish for log data
+        temp_spd_log = String()
+        temp_heading_log = String()
+        temp_spd_log.data = str(cur_OS_spd)
+        temp_heading_log.data = str(cur_OS_heading)
+        self.OS_spd_log_pub.publish(temp_spd_log)
+        self.OS_heading_log_pub.publish(temp_heading_log)
 
 def main(args=None):
     rclpy.init(args=args)
