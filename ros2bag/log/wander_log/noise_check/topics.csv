@@ -1,5 +1,5 @@
 id,name,type,serialization_format,offered_qos_profiles
-1,/log/heading,std_msgs/msg/String,cdr,"- history: 3
+1,/log/spd,std_msgs/msg/String,cdr,"- history: 3
   depth: 0
   reliability: 1
   durability: 2
@@ -14,7 +14,7 @@ id,name,type,serialization_format,offered_qos_profiles
     sec: 9223372036
     nsec: 854775807
   avoid_ros_namespace_conventions: false"
-2,/log/spd,std_msgs/msg/String,cdr,"- history: 3
+2,/log/heading,std_msgs/msg/String,cdr,"- history: 3
   depth: 0
   reliability: 1
   durability: 2
@@ -29,7 +29,7 @@ id,name,type,serialization_format,offered_qos_profiles
     sec: 9223372036
     nsec: 854775807
   avoid_ros_namespace_conventions: false"
-3,/log/enu_pos,std_msgs/msg/String,cdr,"- history: 3
+3,/gps/lat,std_msgs/msg/String,cdr,"- history: 3
   depth: 0
   reliability: 1
   durability: 2
@@ -44,7 +44,7 @@ id,name,type,serialization_format,offered_qos_profiles
     sec: 9223372036
     nsec: 854775807
   avoid_ros_namespace_conventions: false"
-4,/gps/lat,std_msgs/msg/String,cdr,"- history: 3
+4,/gps/lon,std_msgs/msg/String,cdr,"- history: 3
   depth: 0
   reliability: 1
   durability: 2
@@ -59,7 +59,7 @@ id,name,type,serialization_format,offered_qos_profiles
     sec: 9223372036
     nsec: 854775807
   avoid_ros_namespace_conventions: false"
-5,/gps/lon,std_msgs/msg/String,cdr,"- history: 3
+5,/log/enu_pos,std_msgs/msg/String,cdr,"- history: 3
   depth: 0
   reliability: 1
   durability: 2

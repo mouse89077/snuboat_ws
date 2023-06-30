@@ -2,41 +2,41 @@ rosbag2_bagfile_information:
   version: 5
   storage_identifier: sqlite3
   duration:
-    nanoseconds: 175800435561
+    nanoseconds: 163099406941
   starting_time:
-    nanoseconds_since_epoch: 1688086776045359486
-  message_count: 6439
+    nanoseconds_since_epoch: 1688088553392263664
+  message_count: 6117
   topics_with_message_count:
     - topic_metadata:
         name: /gps/lon
         type: std_msgs/msg/String
         serialization_format: cdr
         offered_qos_profiles: "- history: 3\n  depth: 0\n  reliability: 1\n  durability: 2\n  deadline:\n    sec: 9223372036\n    nsec: 854775807\n  lifespan:\n    sec: 9223372036\n    nsec: 854775807\n  liveliness: 1\n  liveliness_lease_duration:\n    sec: 9223372036\n    nsec: 854775807\n  avoid_ros_namespace_conventions: false"
-      message_count: 582
+      message_count: 611
     - topic_metadata:
         name: /gps/lat
         type: std_msgs/msg/String
         serialization_format: cdr
         offered_qos_profiles: "- history: 3\n  depth: 0\n  reliability: 1\n  durability: 2\n  deadline:\n    sec: 9223372036\n    nsec: 854775807\n  lifespan:\n    sec: 9223372036\n    nsec: 854775807\n  liveliness: 1\n  liveliness_lease_duration:\n    sec: 9223372036\n    nsec: 854775807\n  avoid_ros_namespace_conventions: false"
-      message_count: 582
-    - topic_metadata:
-        name: /log/enu_pos
-        type: std_msgs/msg/String
-        serialization_format: cdr
-        offered_qos_profiles: "- history: 3\n  depth: 0\n  reliability: 1\n  durability: 2\n  deadline:\n    sec: 9223372036\n    nsec: 854775807\n  lifespan:\n    sec: 9223372036\n    nsec: 854775807\n  liveliness: 1\n  liveliness_lease_duration:\n    sec: 9223372036\n    nsec: 854775807\n  avoid_ros_namespace_conventions: false"
-      message_count: 1759
-    - topic_metadata:
-        name: /log/spd
-        type: std_msgs/msg/String
-        serialization_format: cdr
-        offered_qos_profiles: "- history: 3\n  depth: 0\n  reliability: 1\n  durability: 2\n  deadline:\n    sec: 9223372036\n    nsec: 854775807\n  lifespan:\n    sec: 9223372036\n    nsec: 854775807\n  liveliness: 1\n  liveliness_lease_duration:\n    sec: 9223372036\n    nsec: 854775807\n  avoid_ros_namespace_conventions: false"
-      message_count: 1758
+      message_count: 611
     - topic_metadata:
         name: /log/heading
         type: std_msgs/msg/String
         serialization_format: cdr
         offered_qos_profiles: "- history: 3\n  depth: 0\n  reliability: 1\n  durability: 2\n  deadline:\n    sec: 9223372036\n    nsec: 854775807\n  lifespan:\n    sec: 9223372036\n    nsec: 854775807\n  liveliness: 1\n  liveliness_lease_duration:\n    sec: 9223372036\n    nsec: 854775807\n  avoid_ros_namespace_conventions: false"
-      message_count: 1758
+      message_count: 1632
+    - topic_metadata:
+        name: /log/enu_pos
+        type: std_msgs/msg/String
+        serialization_format: cdr
+        offered_qos_profiles: "- history: 3\n  depth: 0\n  reliability: 1\n  durability: 2\n  deadline:\n    sec: 9223372036\n    nsec: 854775807\n  lifespan:\n    sec: 9223372036\n    nsec: 854775807\n  liveliness: 1\n  liveliness_lease_duration:\n    sec: 9223372036\n    nsec: 854775807\n  avoid_ros_namespace_conventions: false"
+      message_count: 1631
+    - topic_metadata:
+        name: /log/spd
+        type: std_msgs/msg/String
+        serialization_format: cdr
+        offered_qos_profiles: "- history: 3\n  depth: 0\n  reliability: 1\n  durability: 2\n  deadline:\n    sec: 9223372036\n    nsec: 854775807\n  lifespan:\n    sec: 9223372036\n    nsec: 854775807\n  liveliness: 1\n  liveliness_lease_duration:\n    sec: 9223372036\n    nsec: 854775807\n  avoid_ros_namespace_conventions: false"
+      message_count: 1632
   compression_format: ""
   compression_mode: ""
   relative_file_paths:
@@ -44,7 +44,7 @@ rosbag2_bagfile_information:
   files:
     - path: noise_check_0.db3
       starting_time:
-        nanoseconds_since_epoch: 1688086776045359486
+        nanoseconds_since_epoch: 1688088553392263664
       duration:
-        nanoseconds: 175800435561
-      message_count: 6439
+        nanoseconds: 163099406941
+      message_count: 6117
