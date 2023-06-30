@@ -1,0 +1,76 @@
+id,name,type,serialization_format,offered_qos_profiles
+1,/log/heading,std_msgs/msg/String,cdr,"- history: 3
+  depth: 0
+  reliability: 1
+  durability: 2
+  deadline:
+    sec: 9223372036
+    nsec: 854775807
+  lifespan:
+    sec: 9223372036
+    nsec: 854775807
+  liveliness: 1
+  liveliness_lease_duration:
+    sec: 9223372036
+    nsec: 854775807
+  avoid_ros_namespace_conventions: false"
+2,/log/spd,std_msgs/msg/String,cdr,"- history: 3
+  depth: 0
+  reliability: 1
+  durability: 2
+  deadline:
+    sec: 9223372036
+    nsec: 854775807
+  lifespan:
+    sec: 9223372036
+    nsec: 854775807
+  liveliness: 1
+  liveliness_lease_duration:
+    sec: 9223372036
+    nsec: 854775807
+  avoid_ros_namespace_conventions: false"
+3,/log/enu_pos,std_msgs/msg/String,cdr,"- history: 3
+  depth: 0
+  reliability: 1
+  durability: 2
+  deadline:
+    sec: 9223372036
+    nsec: 854775807
+  lifespan:
+    sec: 9223372036
+    nsec: 854775807
+  liveliness: 1
+  liveliness_lease_duration:
+    sec: 9223372036
+    nsec: 854775807
+  avoid_ros_namespace_conventions: false"
+4,/gps/lat,std_msgs/msg/String,cdr,"- history: 3
+  depth: 0
+  reliability: 1
+  durability: 2
+  deadline:
+    sec: 9223372036
+    nsec: 854775807
+  lifespan:
+    sec: 9223372036
+    nsec: 854775807
+  liveliness: 1
+  liveliness_lease_duration:
+    sec: 9223372036
+    nsec: 854775807
+  avoid_ros_namespace_conventions: false"
+5,/gps/lon,std_msgs/msg/String,cdr,"- history: 3
+  depth: 0
+  reliability: 1
+  durability: 2
+  deadline:
+    sec: 9223372036
+    nsec: 854775807
+  lifespan:
+    sec: 9223372036
+    nsec: 854775807
+  liveliness: 1
+  liveliness_lease_duration:
+    sec: 9223372036
+    nsec: 854775807
+  avoid_ros_namespace_conventions: false"
