@@ -57,32 +57,33 @@ class Differentiater(Node):
 
     def OS_pub(self):
         # delay minimum 10*dt
-        cur_OS_spd = np.linalg.norm(self.OS_enu_pos[9, :] - self.OS_enu_pos[8, :]) / self.dt
-        cur_OS_heading = np.arctan2(self.OS_enu_pos[9, 1] - self.OS_enu_pos[8, 1], self.OS_enu_pos[9, 0] - self.OS_enu_pos[8, 0])
-        cur_OS_heading = np.degrees(cur_OS_heading)
+        if self.OS_enu_pos_received:
+            cur_OS_spd = np.linalg.norm(self.OS_enu_pos[-1, :] - self.OS_enu_pos[-2, :]) / self.dt
+            cur_OS_heading = np.arctan2(self.OS_enu_pos[-1, 1] - self.OS_enu_pos[-2, 1], self.OS_enu_pos[-1, 0] - self.OS_enu_pos[-2, 0])
+            cur_OS_heading = np.degrees(cur_OS_heading)
 
-        self.OS_spd = np.append(self.OS_spd, cur_OS_spd)
-        self.OS_spd = self.OS_spd[1:]
+            self.OS_spd = np.append(self.OS_spd, cur_OS_spd)
+            self.OS_spd = self.OS_spd[1:]
 
-        self.OS_heading = np.append(self.OS_heading, cur_OS_heading)
-        self.OS_heading = self.OS_heading[1:]
+            self.OS_heading = np.append(self.OS_heading, cur_OS_heading)
+            self.OS_heading = self.OS_heading[1:]
 
-        temp_spd = Float64()
-        temp_spd.data = cur_OS_spd
+            temp_spd = Float64()
+            temp_spd.data = cur_OS_spd
 
-        temp_heading = Float64()
-        temp_heading.data = cur_OS_heading
+            temp_heading = Float64()
+            temp_heading.data = cur_OS_heading
 
-        self.OS_spd_pub.publish(temp_spd)
-        self.OS_heading_pub.publish(temp_heading)
+            self.OS_spd_pub.publish(temp_spd)
+            self.OS_heading_pub.publish(temp_heading)
 
-        # publish for log data
-        temp_spd_log = String()
-        temp_heading_log = String()
-        temp_spd_log.data = str(cur_OS_spd)
-        temp_heading_log.data = str(cur_OS_heading)
-        self.OS_spd_log_pub.publish(temp_spd_log)
-        self.OS_heading_log_pub.publish(temp_heading_log)
+            # publish for log data
+            temp_spd_log = String()
+            temp_heading_log = String()
+            temp_spd_log.data = str(cur_OS_spd)
+            temp_heading_log.data = str(cur_OS_heading)
+            self.OS_spd_log_pub.publish(temp_spd_log)
+            self.OS_heading_log_pub.publish(temp_heading_log)
 
 def main(args=None):
     rclpy.init(args=args)

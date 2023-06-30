@@ -80,7 +80,7 @@ class GNSSConverter(Node):
             self.enu_pos_pub.publish(enu_pos)
             
             enu_pos_log = String()
-            enu_pos_log.data = str(self.pos[0]) + "*" + str(self.pos[1])
+            enu_pos_log.data = str(self.pos[0]) + "," + str(self.pos[1])
             self.enu_pos_log_pub.publish(enu_pos_log)
 
 def main(args=None):
