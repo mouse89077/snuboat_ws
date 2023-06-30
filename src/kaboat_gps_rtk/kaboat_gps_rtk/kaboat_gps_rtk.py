@@ -36,10 +36,13 @@ class KaboatGPSRTK(Node):
         if len(cache)>2:
             lat.data = str(cache[0].strip())
             lon.data = str(cache[1].strip())
+
         self.lat_publisher_.publish(lat)
         self.lon_publisher_.publish(lon)
+
         self.get_logger().info('Latitude is: "%s"' % lat.data)
         self.get_logger().info('Longitude is: "%s"' % lon.data)
+
 
 
 def main(args=None):

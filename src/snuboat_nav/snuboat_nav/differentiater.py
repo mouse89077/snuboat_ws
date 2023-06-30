@@ -58,10 +58,14 @@ class Differentiater(Node):
     def OS_pub(self):
         # delay minimum 10*dt
         if self.OS_enu_pos_received:
-            cur_OS_spd = np.linalg.norm(self.OS_enu_pos[-1, :] - self.OS_enu_pos[-2, :]) / self.dt
-            cur_OS_heading = np.arctan2(self.OS_enu_pos[-1, 1] - self.OS_enu_pos[-2, 1], self.OS_enu_pos[-1, 0] - self.OS_enu_pos[-2, 0])
-            cur_OS_heading = np.degrees(cur_OS_heading)
-
+            if (self.OS_enu_pos[-1, 0] != self.OS_enu_pos[-2, 0]) or (self.OS_enu_pos[-1, 1] != self.OS_enu_pos[-2, 1]):
+                cur_OS_spd = np.linalg.norm(self.OS_enu_pos[-1, :] - self.OS_enu_pos[-2, :]) / self.dt
+                cur_OS_heading = np.arctan2(self.OS_enu_pos[-1, 1] - self.OS_enu_pos[-2, 1], self.OS_enu_pos[-1, 0] - self.OS_enu_pos[-2, 0])
+                cur_OS_heading = np.degrees(cur_OS_heading)
+            else:
+                cur_OS_spd = self.OS_spd[-1]
+                cur_OS_heading = self.OS_heading[-1]
+            
             self.OS_spd = np.append(self.OS_spd, cur_OS_spd)
             self.OS_spd = self.OS_spd[1:]
 
