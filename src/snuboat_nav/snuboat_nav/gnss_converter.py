@@ -18,11 +18,11 @@ class GNSSConverter(Node):
         #     self.origin = self.get_parameter('origin').value
         default_params = {
             # to be modified
-            'Left_Bottom' : [37.4556311667, 126.9518098333],
-            'Right_Bottom' : [37.4556311667, 126.9518098333],
-            'Left_Top' : [37.4556311667, 126.9518098333],
-            'Right_Top' : [37.4556311667, 126.9518098333],
-            'origin' : [37.4556311667, 126.9518098333],
+            'Left_Bottom' : [37.4557583, 126.9517448], # to be modified
+            'Right_Bottom' : [37.4558121667, 126.9517401667],
+            'Left_Top' : [37.4556311667, 126.9518098333], # to be modified
+            'Right_Top' : [37.4556311667, 126.9518098333], # to be modified
+            'origin' : [37.4557583, 126.9517448], # to be modified, same as Left_Bottom
         }
         self.Left_Bottom = self.declare_parameter("Left_Bottom", default_params['Left_Bottom']).value
         self.Right_Bottom = self.declare_parameter("Right_Bottom", default_params['Right_Bottom']).value
@@ -80,7 +80,7 @@ class GNSSConverter(Node):
             self.enu_pos_pub.publish(enu_pos)
             
             enu_pos_log = String()
-            enu_pos_log.data = np.append(str(self.pos[0]), "*", str(self.pos[1]))
+            enu_pos_log.data = str(self.pos[0]) + "*" + str(self.pos[1])
             self.enu_pos_log_pub.publish(enu_pos_log)
 
 def main(args=None):
