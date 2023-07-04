@@ -27,7 +27,12 @@ class Lidar_Converter(Node):
         self.obstacles_pub = self.create_subscription(Float64MultiArray, '/obstacles', 1)
         
         self.obstacles_timer = self.create_timer(self.dt, self.pub_obstacles)
-        self.polar_pub =[]
+        
+        #publish => (labels, r, phi)
+        # [[labels, r1,phi1]
+        #  [label2, r2,phi2]]
+        self.polar_pub =np.empty((0,3),int)
+
         self.lidar_scan_received = False
         
     def wait_for_topics(self):
@@ -43,10 +48,12 @@ class Lidar_Converter(Node):
     
     def lidar_scan_callback(self, msg):
         self.lidar_scan_received = True
-        
+        #temporary polar coord []
+        temp_polar = []
         phi = msg.angle_min # radians
         for r in msg.ranges:
             if msg.range_min <= r <= msg.range_max:
+                temp_polar = np.append(temp_polar,[[r,phi]],axis=0)
                 p = Point.polar_to_cartesian(r, phi)
                 self.cartesian_scan = np.append(self.cartesian_scan, p, axis = 0)
             phi += msg.angle_increment
@@ -57,6 +64,11 @@ class Lidar_Converter(Node):
         dbscan = DBSCAN(eps=0.5, min_samples=5)  # Adjust the parameters as per your data
         dbscan.fit(points_scaled)
         self.scan_labels = dbscan.labels_
+        
+        # append label to polar coord
+        for i,coord in enumerate(temp_polar):
+            coord = np.insert(coord,0,self.scan_labels[i])
+            self.polar_pub = np.append(self.polar_pub,[coord],axis=0)
         
     def pub_obstacles(self):
         if max(self.scan_labels) != -1:
