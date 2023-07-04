@@ -27,7 +27,7 @@ class Lidar_Converter(Node):
         self.obstacles_pub = self.create_subscription(Float64MultiArray, '/obstacles', 1)
         
         self.obstacles_timer = self.create_timer(self.dt, self.pub_obstacles)
-        
+        self.polar_pub =[]
         self.lidar_scan_received = False
         
     def wait_for_topics(self):
