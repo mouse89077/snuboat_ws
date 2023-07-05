@@ -71,16 +71,22 @@ class Lidar_Converter(Node):
             self.polar_pub = np.append(self.polar_pub,[coord],axis=0)
         
     def pub_obstacles(self):
+        self.obstacles = np.zeros((5,max(self.scan_labels)))
         if max(self.scan_labels) != -1:
             for i in range(max(self.scan_labels)):
                 idxs = np.where(self.scan_labels == i)[0]
                 self.obstacle = self.cartesian_scan[idxs, :]
                 self.obstacle = np.reshape(self.obstacle, (1, -1))
-                self.obstacles[i] = self.obstacle
+                # [[label r phi x y]]
+                self.obstacle = np.insert(self.obstacle,0,self.polar_pub[i])
+                self.obstacles[i] = self.obstacle # => maybe error? 
+        
         # else: self.obstacles = []
             
         obs = Float64MultiArray()
         obs.data = self.obstacles
+        #polar_pub 추가
+
         self.obstacles_pub.publish(obs)
         
 def main(args=None):
