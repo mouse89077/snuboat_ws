@@ -59,6 +59,7 @@ class Obstacle_Avoidance(Node):
         self.wp_time_cnt = 0
         self.goal_tol = 1.5
         self.wp_state = False
+        self.wp_stay_time = 30
         
         #
         self.ref_heading = 0
