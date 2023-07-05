@@ -4,7 +4,7 @@ import os
 import yaml
 from rclpy.node import Node
 from geometry_msgs.msg import Point
-from std_msgs.msg import String
+from std_msgs.msg import String, Float64MultiArray
 import pymap3d as pm
 import numpy as np
 
@@ -39,7 +39,7 @@ class GNSSConverter(Node):
         self.gps_lat_sub = self.create_subscription(String, '/gps/lat', self.gps_lat_callback, 1)
         
         self.enu_pos_pub = self.create_publisher(Point, '/enu_pos', 1)
-        self.enu_wp_pub = self.create_publisher(Point, '/enu_wp', 1)
+        self.enu_wp_pub = self.create_publisher(Float64MultiArray, '/enu_wp_set', 1)
 
         self.OS_timer = self.create_timer(0.1, self.pub_enu_pos)
 
@@ -93,7 +93,9 @@ class GNSSConverter(Node):
             enu_pos_log.data = str(self.pos[0]) + "," + str(self.pos[1])
             self.enu_pos_log_pub.publish(enu_pos_log)
 
-            self.wp_pos[0], self.wp_pos[1], self.wp_pos[2] = self.enu_convert([self.wp_lat, self.wp_lon])
+        self.
+        for i in len(self.wp_set[:, 0]):
+            self.enu_wp_set[0], self.enu_wp_set[1], self.enu_wp_set[2] = self.enu_convert([self.wp_set, self.wp_set])
             wp = Point()
             wp.x = self.wp_pos[0]
             wp.y = self.wp_pos[1]
