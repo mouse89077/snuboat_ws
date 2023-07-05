@@ -55,6 +55,10 @@ class Obstacle_Avoidance(Node):
         self.spd = np.zeros(10)
         self.obstacles = []
         self.obstacles_points = []
+
+        self.wp_time_cnt = 0
+        self.goal_tol = 1.5
+        self.wp_state = False
         
         #
         self.ref_heading = 0
@@ -89,12 +93,23 @@ class Obstacle_Avoidance(Node):
         self.enu_wp_received = True
         self.enu_wp_set = msg.data 
 
-        if np.linalg.norm(self.enu_pos[-1, :] - self.enu_wp_set[cur_wp_idx, :]) < self.goal_tol:
-            self.get_logger().info("Changing waypoint ...")
-            self.cur_wp_idx += 1
-            self.wp_state = True
-        else:
+        wp_reach_check = np.linalg.norm(self.enu_pos[-1, :] - self.enu_wp_set[cur_wp_idx, :]) < self.goal_tol
+        if wp_reach_check == True:
+            if self.wp_state = False:
+                self.get_logger().info("Changing waypoint ...")
+                self.cur_wp_idx += 1
+                self.wp_state = True
+            else: # self.wp_state = True
+                if self.wp_time_cnt < self.wp_stay_time:
+                    self.wp_time_cnt += 1
+                else: # self.wp_time_cnt > self.wp_stay_time 
+                    
+        else: # wp_reach_check == False:
             self.wp_state = False
+
+        
+
+        # Waypoint mission clear check
         if self.cur_wp_idx > len(self.enu_wp_set[:, 0]):
             self.get_logger().info('Waypoint Mission Clear")
             return  
