@@ -20,18 +20,24 @@ class Lidar_Converter(Node):
         self.dt = 0.1
         self.obstacle = []
         self.obstacles = []
-        self.cartesian_scan = [] # origin: boat
-        
-        self.lidar_scan_sub = self.create_publisher(LaserScan, '/lidar_scan', self.lidar_scan_callback, 1)
-        
-        self.obstacles_pub = self.create_subscription(Float64MultiArray, '/obstacles', 1)
+        self.cart_scan = [] # origin: boat
+        self.polar_scan = [] # origin: boat
+
+        # subscriber
+        self.lidar_scan_sub = self.create_subscription(LaserScan, '/lidar_scan', self.lidar_scan_callback, 1)
+
+        # publisher
+        self.obstacles_pub = self.create_publisher(Float64MultiArray, '/obstacles', 1)
+        self.polar_scan_pub = self.create_publisher(Float64MultiArray, '/polar_scan', 1)
+        self.cart_scan_pub = self.create_publisher(Float64MultiArray, '/cart_scan', 1)
+        self.cluster_label_pub = self.create_publisher(Float64MultiArray, '/cluster_label', 1)
         
         self.obstacles_timer = self.create_timer(self.dt, self.pub_obstacles)
         
         #publish => (labels, r, phi)
         # [[labels, r1,phi1]
         #  [label2, r2,phi2]]
-        self.polar_pub =np.empty((0,3),int)
+        # self.polar_scan =np.empty((0,3),int)
 
         self.lidar_scan_received = False
         
@@ -53,12 +59,12 @@ class Lidar_Converter(Node):
         phi = msg.angle_min # radians
         for r in msg.ranges:
             if msg.range_min <= r <= msg.range_max:
-                temp_polar = np.append(temp_polar,[[r,phi]],axis=0)
+                self.polar_scan = np.append(self.polar_scan, [[r,phi]],axis=0)
                 p = Point.polar_to_cartesian(r, phi)
-                self.cartesian_scan = np.append(self.cartesian_scan, p, axis = 0)
+                self.cart_scan = np.append(self.cart_scan, p, axis = 0)
             phi += msg.angle_increment
             
-        points = np.array(self.cartesian_scan)
+        points = np.array(self.cart_scan)
         scaler = StandardScaler()
         points_scaled = scaler.fit_transform(points)
         dbscan = DBSCAN(eps=0.5, min_samples=5)  # Adjust the parameters as per your data
@@ -66,9 +72,9 @@ class Lidar_Converter(Node):
         self.scan_labels = dbscan.labels_
         
         # append label to polar coord
-        for i,coord in enumerate(temp_polar):
-            coord = np.insert(coord,0,self.scan_labels[i])
-            self.polar_pub = np.append(self.polar_pub,[coord],axis=0)
+        # for i,coord in enumerate(temp_polar):
+        #     coord = np.insert(coord,0,self.scan_labels[i])
+        #     self.polar_scan = np.append(self.polar_scan,[coord],axis=0)
         
     def pub_obstacles(self):
         self.obstacles = np.zeros((5,max(self.scan_labels)))
@@ -82,12 +88,21 @@ class Lidar_Converter(Node):
                 self.obstacles[i] = self.obstacle # => maybe error? 
         
         # else: self.obstacles = []
-            
+
+        # publish
         obs = Float64MultiArray()
         obs.data = self.obstacles
-        #polar_pub 추가
-
         self.obstacles_pub.publish(obs)
+        lab = Float64MultiArray()
+        lab.data = np.reshape(self.scan_labels, (-1, 1))
+        self.cluster_label_pub.publish(lab)
+        polar_sc = Float64MultiArray()
+        polar_sc.data = self.polar_scan
+        self.polar_scan_pub.publish(polar_sc)
+        cart_sc = Float64MultiArray()
+        cart_sc.data = self.cart_scan
+        self.cartesian_scan_pub.publish(cart_sc)
+        
         
 def main(args=None):
     rclpy.init(args=args)
