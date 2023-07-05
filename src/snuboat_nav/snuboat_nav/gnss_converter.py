@@ -35,14 +35,18 @@ class GNSSConverter(Node):
 
         self.gps_lon_sub = self.create_subscription(String, '/gps/lon', self.gps_lon_callback, 1)
         self.gps_lat_sub = self.create_subscription(String, '/gps/lat', self.gps_lat_callback, 1)
+        self.wp_sub = self.create_subscription(Point, '/waypoint', self.waypoint_callback, 1)
         
         self.enu_pos_pub = self.create_publisher(Point, '/enu_pos', 1)
+        self.enu_wp_pub = self.create_publisher(Point, '/enu_wp', 1)
+
         self.OS_timer = self.create_timer(0.1, self.pub_enu_pos)
 
         self.enu_pos_log_pub = self.create_publisher(String, '/log/enu_pos', 1)
-
+       
         self.gps_lon_received = False
         self.gps_lat_received = False
+        self.waypoint_received = False
 
     def wait_for_topics(self):
         self.timer = self.create_timer(1.0, self.check_topics_status)
@@ -67,6 +71,11 @@ class GNSSConverter(Node):
         str_gps_lat = msg.data
         self.gps_lat = float(str_gps_lat)
 
+    def waypoint_callback(self, msg):
+        self.waypoint_received = True
+        self.wp_lat = msg.x
+        self.wp_lon = msg.y
+
     def enu_convert(self, gnss):
         e, n, u = pm.geodetic2enu(gnss[0], gnss[1], 0, self.origin[0], self.origin[1], 0)
         return e, n, u
@@ -82,6 +91,13 @@ class GNSSConverter(Node):
             enu_pos_log = String()
             enu_pos_log.data = str(self.pos[0]) + "," + str(self.pos[1])
             self.enu_pos_log_pub.publish(enu_pos_log)
+
+            self.wp_pos[0], self.wp_pos[1], self.wp_pos[2] = self.enu_convert([self.wp_lat, self.wp_lon])
+            wp = Point()
+            wp.x = self.wp_pos[0]
+            wp.y = self.wp_pos[1]
+            self.enu_wp_pub.publish(wp)
+
 
 def main(args=None):
     rclpy.init(args=args)
