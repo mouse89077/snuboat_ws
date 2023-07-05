@@ -93,7 +93,7 @@ class GNSSConverter(Node):
             enu_pos_log.data = str(self.pos[0]) + "," + str(self.pos[1])
             self.enu_pos_log_pub.publish(enu_pos_log)
 
-        self.enu_wp_set = np.zeros((len(self.wp_set[:, 0], 3))
+        self.enu_wp_set = np.zeros((len(self.wp_set[:, 0]), 3))
         for i in len(self.wp_set[:, 0]):
             self.enu_wp_set[i, 0], self.enu_wp_set[i, 1], self.enu_wp_set[i, 2] = self.enu_convert([self.wp_set[i, 0], self.wp_set[i, 1]])
             

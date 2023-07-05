@@ -154,9 +154,10 @@ class Obstacle_Avoidance(Node):
         else: # self.wp_state = False:
             cur_pos = self.enu_pos[-1, :]
             # wp ref heading
-            self.ref_heading =np.rad2deg(np.arctan2(self.enu_wp_pos[1] - cur_pos[1], self.enu_wp_pos[0] - cur_pos[0]))
+            self.err_heading =np.rad2deg(np.arctan2(self.enu_wp_pos[1] - cur_pos[1], self.enu_wp_pos[0] - cur_pos[0]))
             # body fixed {b}
-            ref_heading_b = self.ref_heading-self.heading
+            err_heading = self.err_heading-self.heading
+            ##
             if len(self.obstacles) == 0:
                 obstacle_num = 0
             else:
@@ -174,7 +175,7 @@ class Obstacle_Avoidance(Node):
                     else:
                         # safe obs => save [phi-ref_heading] radian
                         obs_heading_b = self.obstacles[i,3]-math.pi/2
-                        diff_heading = abs(obs_heading_b-ref_heading_b)
+                        diff_heading = abs(obs_heading_b-err_heading)
                         self.safe_heading = np.append(self.safe_heading,diff_heading,axis=0)
     
                 self.des_spd = np.append(self.des_spd, self.ref_spd)

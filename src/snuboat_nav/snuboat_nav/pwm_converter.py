@@ -25,7 +25,8 @@ class PWMConverter(Node):
         #     self.Kd_servo = config['Kd_servo']
         default_params = {
             'rudder_lim' : [-25, 25],
-            'rudder_pwm_lim' : [1000, 2000], # 1000: left, 2000: right
+            # rudder pwm 500~2500 270 deg
+            'rudder_pwm_lim' : [500, 2500], # 1000: left, 2000: right
             'thrust_pwm_lim' : [1500, 1650], # 1500: stop
             'dt' : 0.1, 
             'Kp_thrust' : 150.0,
