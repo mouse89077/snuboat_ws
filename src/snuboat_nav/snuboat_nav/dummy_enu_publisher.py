@@ -19,6 +19,7 @@ class Dummy_ENU_Publisher(Node):
 
         self.OS_enu_pos_pub = self.create_publisher(Point, '/enu_pos', 1)
         self.OS_heading_pub = self.create_publisher(Float64, '/heading', 1)
+        self.OS_spd_pub = self.create_publisher(Float64, '/spd', 1)
 
         self.timer = self.create_timer(self.dt, self.pub_enu_pos)
 
@@ -30,11 +31,15 @@ class Dummy_ENU_Publisher(Node):
         self.OS_enu_pos_pub.publish(OS_enu_pos_p)
 
         OS_heading_pub_ = Float64()
+        OS_spd_pub_ = Float64()
         if self.cnt != 0:
             OS_heading_pub_.data = np.arctan2(self.OS_enu_y[self.cnt] - self.OS_enu_y[self.cnt - 1], self.OS_enu_x[self.cnt] - self.OS_enu_x[self.cnt - 1])
+            OS_spd_pub_.data = np.linalg.norm([self.OS_enu_x[self.cnt] - self.OS_enu_x[self.cnt - 1], self.OS_enu_y[self.cnt] - self.OS_enu_y[self.cnt - 1])
         else:
             OS_heading_pub_.data = 0
+            OS_spd_pub_.data = 0
         self.OS_heading_pub.publish(OS_heading_pub_)      
+        self.OS_spd_pub.publish(OS_spd_pub_)
 
         self.cnt += 1
         if self.cnt == len(self.OS_enu_x):
