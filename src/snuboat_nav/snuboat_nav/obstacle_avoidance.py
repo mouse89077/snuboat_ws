@@ -4,7 +4,7 @@ import os
 import yaml
 from rclpy.node import Node
 from geometry_msgs.msg import Point
-from std_msgs.msg import Bool, Float64, Float64MultiArray
+from std_msgs.msg import Bool, Int8, Float64, Float64MultiArray
 from sensor_msgs import LaserScan
 import numpy as np
 
@@ -28,6 +28,7 @@ class Obstacle_Avoidance(Node):
         self.origin = self.declare_parameter("origin", default_params['origin']).value
         self.dt = 0.1
         self.waypoint = []
+        self.cur_wp_idx = 1
         
         self.enu_pos_sub = self.create_subscription(Float64, '/enu_pos', self.enu_pos_callback, 1)
         self.heading_sub = self.create_subscription(Float64, '/heading', self.heading_callback, 1)
@@ -37,6 +38,7 @@ class Obstacle_Avoidance(Node):
 
         self.des_heading_pub = self.create_publisher(Float64, '/des_heading', 1)
         self.des_spd_pub = self.create_publisher(Float64, '/des_spd', 1)
+        self.cur_wp_idx_pub = self.create_publisher(Int8, '/wp_idx', 1)
         
         self.des_pub = self.create_timer(self.dt, self.pub_des)
         
@@ -109,6 +111,10 @@ class Obstacle_Avoidance(Node):
         des_spd = Float64()
         des_spd.data = self.des_spd[-1]
         self.des_spd_pub.publish(des_spd) 
+
+        cur_wp_idx_ = Int8()
+        cur_wp_idx_.data = self.cur_wp_idx
+        self.cur_wp_idx_pub.publish(cur_wp_idx_)
         
     def cal_des(self):
         pos_heading = np.linspace(-179, 179, 1)
