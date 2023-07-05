@@ -27,15 +27,16 @@ class GNSSConverter(Node):
         self.Left_Bottom = self.declare_parameter("Left_Bottom", default_params['Left_Bottom']).value
         self.Right_Bottom = self.declare_parameter("Right_Bottom", default_params['Right_Bottom']).value
         self.Left_Top = self.declare_parameter("Left_Top", default_params['Left_Top']).value
-        self.Left_Top = self.declare_parameter("Right_Top", default_params['Right_Top']).value
+        self.Right_Top = self.declare_parameter("Right_Top", default_params['Right_Top']).value
 
         self.origin = self.declare_parameter("origin", default_params['origin']).value
+
+        self.wp_set = np.vstack(self.Right_Top, self.Left_Top, self.Right_Bottom)
 
         self.pos = [0, 0, 0]
 
         self.gps_lon_sub = self.create_subscription(String, '/gps/lon', self.gps_lon_callback, 1)
         self.gps_lat_sub = self.create_subscription(String, '/gps/lat', self.gps_lat_callback, 1)
-        self.wp_sub = self.create_subscription(Point, '/waypoint', self.waypoint_callback, 1)
         
         self.enu_pos_pub = self.create_publisher(Point, '/enu_pos', 1)
         self.enu_wp_pub = self.create_publisher(Point, '/enu_wp', 1)
