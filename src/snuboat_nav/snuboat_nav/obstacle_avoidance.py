@@ -50,7 +50,7 @@ class Obstacle_Avoidance(Node):
         
         # why 10?
         self.enu_pos = np.zeros((10, 2))
-        self.enu_wp_pos = np.zeros((10,2))
+        self.enu_wp_set = np.zeros((10,2))
         self.heading = np.zeros(10)
         self.spd = np.zeros(10)
         self.obstacles = []
@@ -89,6 +89,16 @@ class Obstacle_Avoidance(Node):
         self.enu_wp_received = True
         self.enu_wp_set = msg.data 
 
+        if np.linalg.norm(self.enu_pos[-1, :] - self.enu_wp_set[cur_wp_idx, :]) < self.goal_tol:
+            self.get_logger().info("Changing waypoint ...")
+            self.cur_wp_idx += 1
+            self.wp_state = True
+        else:
+            self.wp_state = False
+        if self.cur_wp_idx > len(self.enu_wp_set[:, 0]):
+            self.get_logger().info('Waypoint Mission Clear")
+            return  
+
     def heading_callback(self, msg):
         self.heading_received = True
         self.heading = np.append(self.heading, msg.data)
@@ -117,49 +127,52 @@ class Obstacle_Avoidance(Node):
         self.cur_wp_idx_pub.publish(cur_wp_idx_)
         
     def cal_des(self):
-        pos_heading = np.linspace(-179, 179, 1)
-        cur_pos = self.enu_pos[-1, :]
-        # wp ref heading
-        self.ref_heading =np.rad2deg(np.arctan2(self.enu_wp_pos[1] - cur_pos[1], self.enu_wp_pos[0] - cur_pos[0]))
-
-        if len(self.obstacles) == 0:
-            obstacle_num = 0
-        else:
-            obstacle_num = len(self.obstacles[:, 0])
-        #### calculate des_heading and des_spd
-        if obstacle_num != 0:
-            # self.obstacles => [[label r phi x y]]
-            for i in range(obstacle_num):
-                # r
-                distance = self.obstacles[i,2]
-                if distance<self.safe_radius:
-                    # danger obs
-                    continue
-                else:
-                    # safe obs => save phi 
-                    self.safe_obs = np.append(self.safe_obs,self.obstacles[i,3],axis=0)
-                    
-                # min_grad = np.arctan2(self.obstacles[i, 1] - cur_pos[1], self.obstacles[i, 0] - cur_pos[0])
-                # max_grad = np.arctan2(self.obstacles[i, -1] - cur_pos[1], self.obstacles[i, -2] - cur_pos[0])
-                # min_grad = np.rad2deg(min_grad)
-                # max_grad = np.rad2deg(max_grad)
-            #     min_grad = self.obstacles[i,3]
-            #     max_grad = self.obstacles[i,3]
-
-
-            #     # idx = np.where(cur_pos < min_grad and cur_pos > max_grad)
-
-
-            self.des_heading = 0
-        else:
-            # previous des_heading value
-            des_heading = self.des_heading[-1]
-            des_spd = self.des_spd[-1]
-        
-        self.des_heading = np.append(self.des_heading, des_heading)
-        self.des_heading = self.des_heading[-1]
-        self.des_spd = np.append(self.des_spd, des_spd)
-        self.des_spd = self.des_spd[-1]
+        if self.wp_state = True:
+            self.des_spd = np.append(self.des_spd, 0)
+            self.des_spd = self.des_spd[1:]
+            self.des_heading = np.append(self.des_heading, 0)
+            self.des_heading = self.des_heading[1:]
+        else: # self.wp_state = False:
+            pos_heading = np.linspace(-179, 179, 1)
+            cur_pos = self.enu_pos[-1, :]
+            # wp ref heading
+            self.ref_heading =np.rad2deg(np.arctan2(self.enu_wp_pos[1] - cur_pos[1], self.enu_wp_pos[0] - cur_pos[0]))
+    
+            if len(self.obstacles) == 0:
+                obstacle_num = 0
+            else:
+                obstacle_num = len(self.obstacles[:, 0])
+                
+            #### calculate des_heading and des_spd
+            if obstacle_num != 0:
+                # self.obstacles => [[label r phi x y]]
+                for i in range(obstacle_num):
+                    # r
+                    distance = self.obstacles[i,2]
+                    if distance<self.safe_radius:
+                        # danger obs
+                        continue
+                    else:
+                        # safe obs => save phi 
+                        self.safe_obs = np.append(self.safe_obs,self.obstacles[i,3],axis=0)
+                        
+                    # min_grad = np.arctan2(self.obstacles[i, 1] - cur_pos[1], self.obstacles[i, 0] - cur_pos[0])
+                    # max_grad = np.arctan2(self.obstacles[i, -1] - cur_pos[1], self.obstacles[i, -2] - cur_pos[0])
+                    # min_grad = np.rad2deg(min_grad)
+                    # max_grad = np.rad2deg(max_grad)
+                #     min_grad = self.obstacles[i,3]
+                #     max_grad = self.obstacles[i,3]
+    
+    
+                #     # idx = np.where(cur_pos < min_grad and cur_pos > max_grad)
+    
+    
+                self.des_heading = 0
+            else:
+                self.des_spd = np.append(self.des_spd, self.des_spd[-1])
+                self.des_spd = self.des_spd[1:]
+                self.des_heading = np.append(self.des_heading, self.des_heading[-1])
+                self.des_heading = self.des_heading[1:]
         
 def main(args=None):
     rclpy.init(args=args)
