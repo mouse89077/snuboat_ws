@@ -22,7 +22,7 @@ class Lidar_Converter(Node):
         self.obstacles = []
         self.cartesian_scan = [] # origin: boat
         
-        self.lidar_scan_sub = self.create_publisher(LaserScan, '/lidar_scan', self.lidar_scan_callback, 1)
+        self.lidar_scan_sub = self.create_publisher(LaserScan, '/scan', self.lidar_scan_callback, 1)
         
         self.obstacles_pub = self.create_subscription(Float64MultiArray, '/obstacles', 1)
         
