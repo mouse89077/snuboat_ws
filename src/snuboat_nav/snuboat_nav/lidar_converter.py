@@ -33,11 +33,6 @@ class Lidar_Converter(Node):
         self.cluster_label_pub = self.create_publisher(Float64MultiArray, '/cluster_label', 1)
         
         self.obstacles_timer = self.create_timer(self.dt, self.pub_obstacles)
-        
-        #publish => (labels, r, phi)
-        # [[labels, r1,phi1]
-        #  [label2, r2,phi2]]
-        # self.polar_scan =np.empty((0,3),int)
 
         self.lidar_scan_received = False
         
