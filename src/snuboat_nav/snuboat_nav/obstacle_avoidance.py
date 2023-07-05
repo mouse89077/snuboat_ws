@@ -35,7 +35,7 @@ class Obstacle_Avoidance(Node):
         self.obstacles_received = False
         self.enu_wp_received = False
         
-        ##??
+        # why 10?
         self.enu_pos = np.zeros((10, 2))
         self.enu_wp_pos = np.zeros((10,2))
         self.heading = np.zeros(10)
@@ -43,8 +43,8 @@ class Obstacle_Avoidance(Node):
         self.obstacles = []
         self.obstacles_points = []
         
-        ######
-
+        #
+        self.ref_heading = 0
         self.safe_radius = 1.5
         self.safe_obs = []
         self.des_heading = np.zeros(10) # why 10?
@@ -71,11 +71,13 @@ class Obstacle_Avoidance(Node):
         self.enu_pos_received = True
         self.enu_pos = np.append(self.enu_pos, [[msg.x, msg.y]], axis=0)
         self.enu_pos = self.enu_pos[1:]
-        
+
     def enu_wp_callback(self,msg):
         self.enu_wp_received = True
         self.enu_wp_pos = np.append(self.enu_wp_pos, [[msg.x, msg.y]], axis=0)
         self.enu_wp_pos = self.enu_wp_pos[1:]
+ 
+
     def heading_callback(self, msg):
         self.heading_received = True
         self.heading = np.append(self.heading, msg.data)
@@ -102,6 +104,9 @@ class Obstacle_Avoidance(Node):
     def cal_des(self):
         pos_heading = np.linspace(-179, 179, 1)
         cur_pos = self.enu_pos[-1, :]
+        # wp ref heading
+        self.ref_heading =np.rad2deg(np.arctan2(self.enu_wp_pos[1] - cur_pos[1], self.enu_wp_pos[0] - cur_pos[0]))
+
         if len(self.obstacles) == 0:
             obstacle_num = 0
         else:
@@ -116,13 +121,9 @@ class Obstacle_Avoidance(Node):
                     # danger obs
                     continue
                 else:
-                    # safe obs
-                    self.safe_obs = np.append(self.safe_obs,self.obstacles[i],axis=0)
-
-
-
-
-
+                    # safe obs => save phi 
+                    self.safe_obs = np.append(self.safe_obs,self.obstacles[i,3],axis=0)
+                    
                 # min_grad = np.arctan2(self.obstacles[i, 1] - cur_pos[1], self.obstacles[i, 0] - cur_pos[0])
                 # max_grad = np.arctan2(self.obstacles[i, -1] - cur_pos[1], self.obstacles[i, -2] - cur_pos[0])
                 # min_grad = np.rad2deg(min_grad)
@@ -132,11 +133,7 @@ class Obstacle_Avoidance(Node):
 
 
             #     # idx = np.where(cur_pos < min_grad and cur_pos > max_grad)
-            
-            
-            #   danger obs
 
-            #   safe obs
 
             self.des_heading = 0
         else:
