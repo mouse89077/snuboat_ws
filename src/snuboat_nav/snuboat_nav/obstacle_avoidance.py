@@ -64,8 +64,9 @@ class Obstacle_Avoidance(Node):
         
         #
         self.ref_heading = 0
+        self.ref_spd = 1
         self.safe_radius = 1.5
-        self.safe_obs = []
+        self.safe_heading = []
         self.des_heading = np.zeros(10) # why 10?
         self.des_spd = np.zeros(10)
                 
@@ -151,11 +152,11 @@ class Obstacle_Avoidance(Node):
             self.des_heading = np.append(self.des_heading, 0)
             self.des_heading = self.des_heading[1:]
         else: # self.wp_state = False:
-            pos_heading = np.linspace(-179, 179, 1)
             cur_pos = self.enu_pos[-1, :]
             # wp ref heading
             self.ref_heading =np.rad2deg(np.arctan2(self.enu_wp_pos[1] - cur_pos[1], self.enu_wp_pos[0] - cur_pos[0]))
-    
+            # body fixed {b}
+            ref_heading_b = self.ref_heading-self.heading
             if len(self.obstacles) == 0:
                 obstacle_num = 0
             else:
@@ -171,21 +172,15 @@ class Obstacle_Avoidance(Node):
                         # danger obs
                         continue
                     else:
-                        # safe obs => save phi 
-                        self.safe_obs = np.append(self.safe_obs,self.obstacles[i,3],axis=0)
-                        
-                    # min_grad = np.arctan2(self.obstacles[i, 1] - cur_pos[1], self.obstacles[i, 0] - cur_pos[0])
-                    # max_grad = np.arctan2(self.obstacles[i, -1] - cur_pos[1], self.obstacles[i, -2] - cur_pos[0])
-                    # min_grad = np.rad2deg(min_grad)
-                    # max_grad = np.rad2deg(max_grad)
-                #     min_grad = self.obstacles[i,3]
-                #     max_grad = self.obstacles[i,3]
+                        # safe obs => save [phi-ref_heading] radian
+                        obs_heading_b = self.obstacles[i,3]-math.pi/2
+                        diff_heading = abs(obs_heading_b-ref_heading_b)
+                        self.safe_heading = np.append(self.safe_heading,diff_heading,axis=0)
     
-    
-                #     # idx = np.where(cur_pos < min_grad and cur_pos > max_grad)
-    
-    
-                self.des_heading = 0
+                self.des_spd = np.append(self.des_spd, self.ref_spd)
+                self.des_spd = self.des_spd[1:]
+                self.des_heading = np.append(self.des_heading, np.min(self.safe_heading))
+                self.des_heading = self.des_heading[1:]
             else:
                 self.des_spd = np.append(self.des_spd, self.des_spd[-1])
                 self.des_spd = self.des_spd[1:]
