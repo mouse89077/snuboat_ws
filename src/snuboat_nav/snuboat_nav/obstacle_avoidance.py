@@ -13,8 +13,19 @@ class Obstacle_Avoidance(Node):
         super().__init__('lidar_converter')
         
         default_params = {
-            # to be filled 
+            # to be modified
+            'Left_Bottom' : [37.4557583, 126.9517448], # to be modified
+            'Right_Bottom' : [37.4558121667, 126.9517401667],
+            'Left_Top' : [37.4556311667, 126.9518098333], # to be modified
+            'Right_Top' : [37.4556311667, 126.9518098333], # to be modified
+            'origin' : [37.4557583, 126.9517448], # to be modified, same as Left_Bottom
         }
+        self.Left_Bottom = self.declare_parameter("Left_Bottom", default_params['Left_Bottom']).value
+        self.Right_Bottom = self.declare_parameter("Right_Bottom", default_params['Right_Bottom']).value
+        self.Left_Top = self.declare_parameter("Left_Top", default_params['Left_Top']).value
+        self.Left_Top = self.declare_parameter("Right_Top", default_params['Right_Top']).value
+
+        self.origin = self.declare_parameter("origin", default_params['origin']).value
         self.dt = 0.1
         self.waypoint = []
         
