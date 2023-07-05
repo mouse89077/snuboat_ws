@@ -33,7 +33,7 @@ class Obstacle_Avoidance(Node):
         self.heading_sub = self.create_subscription(Float64, '/heading', self.heading_callback, 1)
         self.spd_sub = self.create_subscription(Float64, '/spd', self.spd_callback, 1)
         self.obstacles_sub = self.create_subscription(Float64MultiArray, '/obstacles', self.obstacles_callback, 1)
-        self.wp_sub = self.create_subscription(Float64, '/enu_wp',self.enu_wp_callback,1)
+        self.enu_wp_set_sub = self.create_subscription(Float64MultiArray, '/enu_wp_set', self.enu_wp_set_callback, 1)
 
         self.des_heading_pub = self.create_publisher(Float64, '/des_heading', 1)
         self.des_spd_pub = self.create_publisher(Float64, '/des_spd', 1)
@@ -83,11 +83,9 @@ class Obstacle_Avoidance(Node):
         self.enu_pos = np.append(self.enu_pos, [[msg.x, msg.y]], axis=0)
         self.enu_pos = self.enu_pos[1:]
 
-    def enu_wp_callback(self,msg):
+    def enu_wp_set_callback(self,msg):
         self.enu_wp_received = True
-        self.enu_wp_pos = np.append(self.enu_wp_pos, [[msg.x, msg.y]], axis=0)
-        self.enu_wp_pos = self.enu_wp_pos[1:]
- 
+        self.enu_wp_set = msg.data 
 
     def heading_callback(self, msg):
         self.heading_received = True
