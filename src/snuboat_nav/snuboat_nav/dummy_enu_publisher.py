@@ -53,6 +53,7 @@ class Dummy_ENU_Publisher(Node):
             self.get_logger().info('Executing dummy_enu_publisher')
     def pub_wp_set(self):
         wp_set = Float64MultiArray()
+        self.wp_set=[[float(self.wp_set[i][j]) for j in range(len(self.wp_set))] for i in range(len(self.wp_set[0]))]
         wp_set.data = self.wp_set
         self.enu_wp_set_pub.publish(wp_set)
         self.get_logger().info('publish wp_set')
