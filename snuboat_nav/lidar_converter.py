@@ -52,11 +52,11 @@ class Lidar_Converter(Node):
     def lidar_scan_callback(self, msg):
         self.lidar_scan_received = True
         #temporary polar coord []
-        temp_polar = [[]]
+        temp_polar = np.empty((0,2),float)
         phi = msg.angle_min # radians
         for r in msg.ranges:
             if msg.range_min <= r <= msg.range_max:
-                temp_polar = np.append(temp_polar,[[r,phi]],axis=1)
+                temp_polar = np.append(temp_polar,[[r,phi]],axis=0)
                 #Point => polar_to_cartesian not exist 
                 p = [r*cos(phi),r*sin(phi)]
                 self.cartesian_scan = np.append(self.cartesian_scan, [p], axis = 1)
@@ -68,10 +68,14 @@ class Lidar_Converter(Node):
         dbscan = DBSCAN(eps=0.5, min_samples=5)  # Adjust the parameters as per your data
         dbscan.fit(points_scaled)
         self.scan_labels = dbscan.labels_
-        
+        print(self.scan_labels)
+        print(temp_polar)
         # append label to polar coord
         for i,coord in enumerate(temp_polar):
+            print(coord)
             coord = np.insert(coord,0,self.scan_labels[i])
+            print("label added")
+            print(coord)
             self.polar_pub = np.append(self.polar_pub,[coord],axis=0)
         
     # publish obstacle sinfo
