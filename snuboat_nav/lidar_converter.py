@@ -71,8 +71,8 @@ class Lidar_Converter(Node):
         print(self.scan_labels)
         print(temp_polar)
         # append label to polar coord
-        for i,coord in enumerate(temp_polar):
-            print(coord)
+        for i in range(len(temp_polar)):
+            coord = temp_polar[i]
             coord = np.insert(coord,0,self.scan_labels[i])
             print("label added")
             print(coord)
