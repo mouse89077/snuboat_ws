@@ -55,9 +55,9 @@ class Dummy_ENU_Publisher(Node):
         wp_set = Float64MultiArray()
         temp = []
         for point in self.wp_set:
-            point[0] = float(point[0])
-            point[1] = float(point[1])
-            temp.append([point[0],point[1]])
+            point_x = float(point[0])
+            point_y = float(point[1])
+            temp.append([point_x,point_y])
         wp_set.data = temp
         self.enu_wp_set_pub.publish(wp_set)
         self.get_logger().info('publish wp_set')
