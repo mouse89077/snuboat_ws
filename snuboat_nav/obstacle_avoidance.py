@@ -5,7 +5,7 @@ import yaml
 from rclpy.node import Node
 from geometry_msgs.msg import Point
 from std_msgs.msg import Bool, Int8, Float64, Float64MultiArray
-from sensor_msgs import LaserScan
+from sensor_msgs.msg import LaserScan
 import numpy as np
 
 class Obstacle_Avoidance(Node):
