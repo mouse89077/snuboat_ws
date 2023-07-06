@@ -51,11 +51,11 @@ class Lidar_Converter(Node):
     def lidar_scan_callback(self, msg):
         self.lidar_scan_received = True
         #temporary polar coord []
-        temp_polar = []
+        temp_polar = [[]]
         phi = msg.angle_min # radians
         for r in msg.ranges:
             if msg.range_min <= r <= msg.range_max:
-                temp_polar = np.append(temp_polar,[[r,phi]],axis=0)
+                temp_polar = np.append(temp_polar,[[r,phi]],axis=1)
                 p = Point.polar_to_cartesian(r, phi)
                 self.cartesian_scan = np.append(self.cartesian_scan, p, axis = 0)
             phi += msg.angle_increment
