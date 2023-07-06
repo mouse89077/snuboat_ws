@@ -31,7 +31,7 @@ class GNSSConverter(Node):
 
         self.origin = self.declare_parameter("origin", default_params['origin']).value
 
-        self.wp_set = np.vstack(self.Right_Top, self.Left_Top, self.Right_Bottom)
+        self.wp_set = np.vstack((self.Right_Top, self.Left_Top, self.Right_Bottom))
 
         self.pos = [0, 0, 0]
 

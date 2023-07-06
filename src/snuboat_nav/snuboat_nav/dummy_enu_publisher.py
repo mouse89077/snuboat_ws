@@ -23,7 +23,7 @@ class Dummy_ENU_Publisher(Node):
 
         self.timer = self.create_timer(self.dt, self.pub_enu_pos)
 
-        self.wp_set = np.vstack(([0,0],[20,0],[40,0],[60,0]))
+        self.wp_set = np.vstack(([0.,0.],[20.,0.],[40.,0.],[60.,0.]))
         self.enu_wp_set_pub = self.create_publisher(Float64MultiArray, '/enu_wp_set', 1)
 
         self.timer = self.create_timer(self.dt, self.pub_wp_set)
