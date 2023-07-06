@@ -53,17 +53,27 @@ class Dummy_ENU_Publisher(Node):
             self.get_logger().info('Executing dummy_enu_publisher')
     def pub_wp_set(self):
         wp_set = Float64MultiArray()
-        dim = []
-        dim.append(MultiArrayDimension("points", n, 2*n))
-        dim.append(MultiArrayDimension("coords", len(self.wp_set), 1))
-        wp_set.layout.dim =dim
-        temp = []
-        for point in self.wp_set:
-            point_x = float(point[0])
-            point_y = float(point[1])
-            temp.append([point_x,point_y])
+        temp = np.zeros((len(self.wp_set),2))
+        for i in range(len(self.wp_set)):
+            point_x = float(self.wp_set[i][0])
+            point_y = float(self.wp_set[i][1])
+            temp[i]=[point_x,point_y]
+        b = temp.reshape([8])
+        wp_set.data = b.tolist()
         
-        wp_set.data = temp
+        wp_set.layout.data_offset = 0 
+        # create two dimensions in the dim array
+        wp_set.layout.dim = [MultiArrayDimension(), MultiArrayDimension()]
+        # dim[0] is the vertical dimension of your matrix
+        wp_set.layout.dim[0].label = "channels"
+        wp_set.layout.dim[0].size = 2
+        wp_set.layout.dim[0].stride = 2*len(self.wp_set)
+        # dim[1] is the horizontal dimension of your matrix
+        wp_set.layout.dim[1].label = "samples"
+        wp_set.layout.dim[1].size = len(self.wp_set)
+        wp_set.layout.dim[1].stride = len(self.wp_set)
+        
+        
         self.enu_wp_set_pub.publish(wp_set)
         self.get_logger().info('publish wp_set')
 
