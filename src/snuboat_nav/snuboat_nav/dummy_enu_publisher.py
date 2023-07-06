@@ -58,7 +58,7 @@ class Dummy_ENU_Publisher(Node):
             point[0] = float(point[0])
             point[1] = float(point[1])
             temp.append([point[0],point[1]])
-        wp_set.data = self.wp_set
+        wp_set.data = temp
         self.enu_wp_set_pub.publish(wp_set)
         self.get_logger().info('publish wp_set')
 
