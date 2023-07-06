@@ -9,7 +9,7 @@ from sensor_msgs import LaserScan
 import numpy as np
 
 class Obstacle_Avoidance(Node):
-    def __init__(self):
+    def __init__(self): 
         super().__init__('lidar_converter')
         
         default_params = {
@@ -98,7 +98,7 @@ class Obstacle_Avoidance(Node):
 
         self.wp_reach_check = np.linalg.norm(self.enu_pos[-1, :] - self.enu_wp_set[cur_wp_idx, :]) < self.goal_tol
         if self.wp_reach_check == True:
-            if self.wp_state = False:
+            if self.wp_state == False:
                 self.get_logger().info("Changing waypoint ...")
                 self.cur_wp_idx += 1
                 self.wp_state = True
@@ -115,7 +115,7 @@ class Obstacle_Avoidance(Node):
 
         # Waypoint mission clear check
         if self.cur_wp_idx > len(self.enu_wp_set[:, 0]):
-            self.get_logger().info('Waypoint Mission Clear")
+            self.get_logger().info("Waypoint Mission Clear")
             return  
 
     def heading_callback(self, msg):
