@@ -53,14 +53,10 @@ class Dummy_ENU_Publisher(Node):
             self.get_logger().info('Executing dummy_enu_publisher')
     def pub_wp_set(self):
         wp_set = Float64MultiArray()
-        # wp_set.layout.dim.push_back(MultiArrayDimension())
-        # wp_set.layout.dim.push_back(MultiArrayDimension())
-        wp_set.layout.dim[0].label = "row"
-        wp_set.layout.dim[0].size = len(self.wp_set)
-        # wp_set.layout.dim[0].stride = HEIGHT
-        wp_set.layout.dim[1].label = "col"
-        wp_set.layout.dim[1].size = 2
-        # wp_set.layout.dim[1].stride = WIDTH111
+        dim = []
+        dim.append(MultiArrayDimension("points", n, 2*n))
+        dim.append(MultiArrayDimension("coords", len(self.wp_set), 1))
+        wp_set.layout.dim =dim
         temp = []
         for point in self.wp_set:
             point_x = float(point[0])
