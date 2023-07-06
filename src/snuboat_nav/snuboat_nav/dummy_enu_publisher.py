@@ -3,7 +3,7 @@ import os
 import yaml
 from rclpy.node import Node
 from geometry_msgs.msg import Point
-from std_msgs.msg import Float64 ,Float64MultiArray
+from std_msgs.msg import Float64 ,Float64MultiArray, MultiArrayDimension
 import numpy as np
 
 class Dummy_ENU_Publisher(Node):
@@ -53,11 +53,20 @@ class Dummy_ENU_Publisher(Node):
             self.get_logger().info('Executing dummy_enu_publisher')
     def pub_wp_set(self):
         wp_set = Float64MultiArray()
+        wp_set.layout.dim.push_back(MultiArrayDimension());
+        wp_set.layout.dim.push_back(MultiArrayDimension());
+        wp_set.layout.dim[0].label = "row"
+        wp_set.layout.dim[0].size = len(self.wp_set)
+        # wp_set.layout.dim[0].stride = HEIGHT
+        wp_set.layout.dim[1].label = "col"
+        wp_set.layout.dim[1].size = 2
+        # wp_set.layout.dim[1].stride = WIDTH111
         temp = []
         for point in self.wp_set:
             point_x = float(point[0])
             point_y = float(point[1])
             temp.append([point_x,point_y])
+        
         wp_set.data = temp
         self.enu_wp_set_pub.publish(wp_set)
         self.get_logger().info('publish wp_set')
