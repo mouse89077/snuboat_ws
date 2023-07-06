@@ -22,9 +22,9 @@ class Lidar_Converter(Node):
         self.obstacles = []
         self.cartesian_scan = [] # origin: boat
         
-        self.lidar_scan_sub = self.create_publisher(LaserScan, '/scan', self.lidar_scan_callback, 1)
+        self.lidar_scan_sub = self.create_subscription(LaserScan, '/scan', self.lidar_scan_callback, 1)
         
-        self.obstacles_pub = self.create_subscription(Float64MultiArray, '/obstacles', 1)
+        self.obstacles_pub = self.create_publisher(Float64MultiArray, '/obstacles', 1)
         
         self.obstacles_timer = self.create_timer(self.dt, self.pub_obstacles)
         
@@ -46,6 +46,7 @@ class Lidar_Converter(Node):
         else:
             self.get_logger().info('All topics received')
     
+    # scan msg => save in polar_pub
     def lidar_scan_callback(self, msg):
         self.lidar_scan_received = True
         #temporary polar coord []
@@ -70,6 +71,7 @@ class Lidar_Converter(Node):
             coord = np.insert(coord,0,self.scan_labels[i])
             self.polar_pub = np.append(self.polar_pub,[coord],axis=0)
         
+    # publish obstacle sinfo
     def pub_obstacles(self):
         self.obstacles = np.zeros((5,max(self.scan_labels)))
         if max(self.scan_labels) != -1:
