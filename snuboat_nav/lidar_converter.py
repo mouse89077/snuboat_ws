@@ -2,6 +2,7 @@
 import rclpy
 import os
 import yaml
+from math import pi, cos, sin
 from rclpy.node import Node
 from geometry_msgs.msg import Point
 from rclpy.qos import qos_profile_sensor_data
