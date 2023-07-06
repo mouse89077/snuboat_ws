@@ -36,8 +36,8 @@ class Dummy_ENU_Publisher(Node):
             OS_heading_pub_.data = np.arctan2(self.OS_enu_y[self.cnt] - self.OS_enu_y[self.cnt - 1], self.OS_enu_x[self.cnt] - self.OS_enu_x[self.cnt - 1])
             OS_spd_pub_.data = np.linalg.norm(self.OS_enu_x[self.cnt] - self.OS_enu_x[self.cnt - 1], self.OS_enu_y[self.cnt] - self.OS_enu_y[self.cnt - 1])
         else:
-            OS_heading_pub_.data = 0
-            OS_spd_pub_.data = 0
+            OS_heading_pub_.data = 0.
+            OS_spd_pub_.data = 0.
         self.OS_heading_pub.publish(OS_heading_pub_)      
         self.OS_spd_pub.publish(OS_spd_pub_)
 
