@@ -6,7 +6,7 @@ from rclpy.node import Node
 from geometry_msgs.msg import Point
 from rclpy.qos import qos_profile_sensor_data
 from std_msgs.msg import Bool, Float64, Float64MultiArray
-from sensor_msgs import LaserScan
+from sensor_msgs.msg import LaserScan
 import numpy as np
 from sklearn.cluster import DBSCAN
 from sklearn.preprocessing import StandardScaler

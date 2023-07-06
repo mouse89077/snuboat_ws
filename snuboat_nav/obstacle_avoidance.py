@@ -10,7 +10,7 @@ import numpy as np
 
 class Obstacle_Avoidance(Node):
     def __init__(self): 
-        super().__init__('obstacle avoidance')
+        super().__init__('obstacle_avoidance')
         
         default_params = {
             # to be modified
