@@ -3,7 +3,7 @@ import os
 import yaml
 from rclpy.node import Node
 from geometry_msgs.msg import Point
-from std_msgs.msg import Float64
+from std_msgs.msg import Float64 ,Float64MultiArray
 import numpy as np
 
 class Dummy_ENU_Publisher(Node):
@@ -23,6 +23,10 @@ class Dummy_ENU_Publisher(Node):
 
         self.timer = self.create_timer(self.dt, self.pub_enu_pos)
 
+        self.wp_set = np.vstack([0,0],[20,0],[40,0],[60,0])
+        self.enu_wp_set_pub = self.create_publisher(Float64MultiArray, '/enu_wp_set', 1)
+
+        self.timer = self.create_timer(self.dt, self.pub_wp_set)
 
     def pub_enu_pos(self):
         OS_enu_pos_p = Point()
@@ -47,7 +51,11 @@ class Dummy_ENU_Publisher(Node):
             self.get_logger().info('Exiting dummy_enu_publisher')
         else:
             self.get_logger().info('Executing dummy_enu_publisher')
-        
+    def pub_wp_set(self):
+        wp_set = Float64MultiArray()
+        wp_set.data = self.wp_set
+        self.enu_wp_set_pub.publish(wp_set)
+        self.get_logger().info('publish wp_set')
 
 def main(args=None):
     rclpy.init(args=args)
