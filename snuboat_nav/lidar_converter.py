@@ -21,7 +21,7 @@ class Lidar_Converter(Node):
         self.dt = 0.1
         self.obstacle = [] 
         self.obstacles = []
-        self.cartesian_scan = [] # origin: boat
+        self.cartesian_scan = [[]] # origin: boat
         
         self.lidar_scan_sub = self.create_subscription(LaserScan, '/scan', self.lidar_scan_callback, qos_profile_sensor_data)
         
@@ -56,11 +56,12 @@ class Lidar_Converter(Node):
         for r in msg.ranges:
             if msg.range_min <= r <= msg.range_max:
                 temp_polar = np.append(temp_polar,[[r,phi]],axis=1)
-                p = Point.polar_to_cartesian(r, phi)
-                self.cartesian_scan = np.append(self.cartesian_scan, p, axis = 0)
+                #Point => polar_to_cartesian not exist 
+                p = [r*cos(phi),r*sin(phi)]
+                self.cartesian_scan = np.append(self.cartesian_scan, [p], axis = 1)
             phi += msg.angle_increment
-            
-        points = np.array(self.cartesian_scan)
+        print(self.cartesian_scan)
+        points = self.cartesian_scan
         scaler = StandardScaler()
         points_scaled = scaler.fit_transform(points)
         dbscan = DBSCAN(eps=0.5, min_samples=5)  # Adjust the parameters as per your data
