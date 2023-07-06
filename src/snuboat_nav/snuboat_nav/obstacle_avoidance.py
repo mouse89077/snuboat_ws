@@ -10,7 +10,7 @@ import numpy as np
 
 class Obstacle_Avoidance(Node):
     def __init__(self): 
-        super().__init__('lidar_converter')
+        super().__init__('obstacle avoidance')
         
         default_params = {
             # to be modified
@@ -96,7 +96,7 @@ class Obstacle_Avoidance(Node):
         self.enu_wp_received = True
         self.enu_wp_set = msg.data 
 
-        self.wp_reach_check = np.linalg.norm(self.enu_pos[-1, :] - self.enu_wp_set[cur_wp_idx, :]) < self.goal_tol
+        self.wp_reach_check = np.linalg.norm(self.enu_pos[-1, :] - self.enu_wp_set[self.cur_wp_idx, :]) < self.goal_tol
         if self.wp_reach_check == True:
             if self.wp_state == False:
                 self.get_logger().info("Changing waypoint ...")
