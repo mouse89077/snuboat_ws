@@ -4,6 +4,7 @@ import os
 import yaml
 from rclpy.node import Node
 from geometry_msgs.msg import Point
+from rclpy.qos import qos_profile_sensor_data
 from std_msgs.msg import Bool, Float64, Float64MultiArray
 from sensor_msgs import LaserScan
 import numpy as np
@@ -18,11 +19,11 @@ class Lidar_Converter(Node):
             
         }
         self.dt = 0.1
-        self.obstacle = []
+        self.obstacle = [] 
         self.obstacles = []
         self.cartesian_scan = [] # origin: boat
         
-        self.lidar_scan_sub = self.create_subscription(LaserScan, '/scan', self.lidar_scan_callback, 1)
+        self.lidar_scan_sub = self.create_subscription(LaserScan, '/scan', self.lidar_scan_callback, qos_profile_sensor_data)
         
         self.obstacles_pub = self.create_publisher(Float64MultiArray, '/obstacles', 1)
         
