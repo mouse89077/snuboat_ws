@@ -16,12 +16,7 @@ class Lidar_Converter(Node):
     def __init__(self):
         super().__init__('lidar_converter')
         
-        default_params = {
-            
-        }
         self.dt = 0.1
-        self.obstacle = [] 
-        self.obstacles = []
         self.polar_scan = []
         self.cart_scan = [] # origin: boat
         
