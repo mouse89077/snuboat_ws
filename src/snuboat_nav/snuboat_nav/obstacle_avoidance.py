@@ -29,6 +29,12 @@ class Obstacle_Avoidance(Node):
         self.dt = 0.1
         self.waypoint = []
         self.cur_wp_idx = 1
+
+        self.obs_labels_sub = self.create_subscription(Float64MultiArray, '/obs/labels', self.obs_labels_callback, 1)
+        self.obs_r_sub = self.create_subscription(Float64MultiArray, '/obs/r', self.obs_r_callback, 1)
+        self.obs_phi_sub = self.create_subscription(Float64MultiArray, '/obs/phi', self.obs_phi_callback, 1)
+        self.obs_x_sub = self.create_subscription(Float64MultiArray, '/obs/x', self.obs_x_callback, 1)
+        self.obs_y_sub = self.create_subscription(Float64MultiArray, '/obs/y', self.obs_y_callback, 1)
         
         self.enu_pos_sub = self.create_subscription(Float64, '/enu_pos', self.enu_pos_callback, 1)
         self.heading_sub = self.create_subscription(Float64, '/heading', self.heading_callback, 1)
@@ -41,6 +47,12 @@ class Obstacle_Avoidance(Node):
         self.cur_wp_idx_pub = self.create_publisher(Int8, '/wp_idx', 1)
         
         self.des_pub = self.create_timer(self.dt, self.pub_des)
+
+        self.obs_labels_received = False
+        self.obs_r_received = False
+        self.obs_phi_received = False
+        self.obs_x_received = False
+        self.obs_y_received = False
         
         self.enu_pos_received = False
         self.heading_received = False
@@ -86,7 +98,11 @@ class Obstacle_Avoidance(Node):
             self.get_logger().info('All topics received')
         else: 
             self.get_logger().info('Waiting for topics to be published')
-            
+
+    def obs_labels_callback(self, msg):
+    	self.obs_labels_received = True
+    	self.obs_
+        
     def enu_pos_callback(self, msg):
         self.enu_pos_received = True
         self.enu_pos = np.append(self.enu_pos, [[msg.x, msg.y]], axis=0)
