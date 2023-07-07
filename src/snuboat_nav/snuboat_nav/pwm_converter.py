@@ -42,9 +42,7 @@ class PWMConverter(Node):
         self.Kd_thrust = self.declare_parameter("Kd_thrust", default_params['Kd_thrust']).value
         self.Kp_rudder = self.declare_parameter("Kp_rudder", default_params['Kp_rudder']).value
         self.Kd_rudder = self.declare_parameter("Kd_rudder", default_params['Kd_rudder']).value
-            
-        namespace_OS = '/OS'
-        
+                    
         self.OS_des_heading = np.zeros(10)
         self.OS_des_spd = np.zeros(10)
         self.OS_heading = np.zeros(10)
@@ -56,12 +54,12 @@ class PWMConverter(Node):
         self.thrust_pwm = np.zeros(10)
         self.rudder_pwm = np.zeros(10)
         
-        self.OS_des_heading_sub = self.create_subscription(Float64, namespace_OS + '/des_heading', self.OS_des_heading_callback, 1)
-        self.OS_des_spd_sub =self.create_subscription(Float64, namespace_OS + '/des_spd', self.OS_des_spd_callback, 1)
-        self.OS_heading = self.create_subscription(Float64, namespace_OS + '/heading', self.OS_heading_callback, 1)
-        self.OS_spd = self.create_subscription(Float64, namespace_OS + '/spd', self.OS_spd_callback, 1)
+        self.OS_des_heading_sub = self.create_subscription(Float64, '/des_heading', self.OS_des_heading_callback, 1)
+        self.OS_des_spd_sub =self.create_subscription(Float64, '/des_spd', self.OS_des_spd_callback, 1)
+        self.OS_heading = self.create_subscription(Float64, '/heading', self.OS_heading_callback, 1)
+        self.OS_spd = self.create_subscription(Float64, '/spd', self.OS_spd_callback, 1)
         
-        self.pwm_pub =self.create_publisher(Int32, namespace_OS + '/pwm', 1)
+        self.pwm_pub =self.create_publisher(Int32, '/pwm', 1)
         
         self.pwm_timer = self.create_timer(self.dt, self.pub_pwm)
 

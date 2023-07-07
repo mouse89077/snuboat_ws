@@ -5,9 +5,8 @@ import yaml
 from rclpy.node import Node
 from geometry_msgs.msg import Point
 from rclpy.qos import qos_profile_sensor_data
-from std_msgs.msg import Bool, Float64, Float64MultiArray
-from snuboat_msgs.msg import Obstacles
-from sensor_msgs import LaserScan
+from std_msgs.msg import Bool, Float64, Float64MultiArray, Int32MultiArray
+from sensor_msgs.msg import LaserScan
 import numpy as np
 from sklearn.cluster import DBSCAN
 from sklearn.preprocessing import StandardScaler
@@ -17,12 +16,16 @@ class Lidar_Converter(Node):
         super().__init__('lidar_converter')
         
         self.dt = 0.1
-        self.polar_scan = []
-        self.cart_scan = [] # origin: boat
+        self.polar_scan = np.empty((0,2),float)
+        self.cart_scan = np.empty((0,2),float) # origin: boat
         
         self.lidar_scan_sub = self.create_subscription(LaserScan, '/scan', self.lidar_scan_callback, qos_profile_sensor_data)
         
-        self.obstacles_pub = self.create_publisher(Obstacles, '/obstacles', 1)
+        self.obs_labels_pub = self.create_publisher(Int32MultiArray, '/obs/labels', 1)
+        self.obs_r_pub = self.create_publisher(Float64MultiArray, '/obs/r', 1)
+        self.obs_phi_pub = self.create_publisher(Float64MultiArray, '/obs/phi', 1)
+        self.obs_x_pub = self.create_publisher(Float64MultiArray, '/obs/x', 1)
+        self.obs_y_pub = self.create_publisher(Float64MultiArray, '/obs/y', 1)
         
         self.obstacles_timer = self.create_timer(self.dt, self.pub_obstacles)
 
@@ -42,34 +45,49 @@ class Lidar_Converter(Node):
     # scan msg => save in polar_pub
     def lidar_scan_callback(self, msg):
         self.lidar_scan_received = True
-        #temporary polar coord []
-        phi = msg.angle_min # radians
+        phi = msg.angle_min
         for r in msg.ranges:
             if msg.range_min <= r <= msg.range_max:
-                if len(self.polar_scan)==0:
-                    self.polar_scan = [r, phi]
-                    self.cart_scan = [r*np.cos(np.radians(phi)), r*np.sin(np.radians(phi))]
-                else:
-                    self.polar_scan = np.append(self.polar_scan, [[r,phi]],axis=0)
-                    self.cart_scan = np.append(self.cart_scan, [[r*np.cos(np.radians(phi)), r*np.sin(np.radians(phi))]], axis = 0)
+                polar_point = np.array([[r, phi]])  # Convert to a NumPy array with shape (1, 2)
+                cart_point = np.array([[r * np.cos(phi), r * np.sin(phi)]])  # Convert to a NumPy array with shape (1, 2)
+                self.polar_scan = np.append(self.polar_scan, polar_point, axis=0)  # Append the NumPy arrays
+                self.cart_scan = np.append(self.cart_scan, cart_point, axis=0)
             phi += msg.angle_increment
             
         points = np.array(self.cart_scan)
         scaler = StandardScaler()
         points_scaled = scaler.fit_transform(points)
-        dbscan = DBSCAN(eps=0.5, min_samples=5)  # Adjust the parameters as per your data
+        dbscan = DBSCAN(eps=0.1, min_samples=5)  # Adjust the parameters as per your data
         dbscan.fit(points_scaled)
         self.scan_labels = dbscan.labels_
+        # print(type(self.scan_labels))
         
     # publish obstacle sinfo
     def pub_obstacles(self):
-        obs = Obstacles()
-        obs.labels.data = self.scan_labels
-        obs.r.data = np.transpose(self.polar_scan[:, 0])
-        obs.phi.data = np.transpose(self.polar_scan[:, 1])
-        obs.x.data = np.transpose(self.cart_scan[:, 0])
-        obs.y.data = np.transpose(self.cart_scan[:, 1])
-        self.obstacles_pub.publish(obs)
+    
+        indices_to_delete = [i for i, label in enumerate(self.scan_labels) if label == -1]
+        self.polar_scan = np.delete(self.polar_scan, indices_to_delete, axis=0)
+        self.cart_scan = np.delete(self.cart_scan, indices_to_delete, axis=0)
+        
+        self.polar_scan = np.array(self.polar_scan)  # Convert back to NumPy array
+        self.cart_scan = np.array(self.cart_scan)  # Convert back to NumPy array
+
+        obs_labels = Int32MultiArray()
+        obs_labels.data = self.scan_labels.tolist()
+        obs_r = Float64MultiArray()
+        obs_r.data = self.polar_scan[:, 0].tolist()
+        obs_phi = Float64MultiArray()
+        obs_phi.data = self.polar_scan[:, 1].tolist()
+        obs_x = Float64MultiArray()
+        obs_x.data = self.cart_scan[:, 0].tolist()
+        obs_y = Float64MultiArray()
+        obs_y.data = self.cart_scan[:, 1].tolist()
+
+        self.obs_labels_pub.publish(obs_labels)
+        self.obs_r_pub.publish(obs_r)
+        self.obs_phi_pub.publish(obs_phi)
+        self.obs_x_pub.publish(obs_x)
+        self.obs_y_pub.publish(obs_y)
         
 def main(args=None):
     rclpy.init(args=args)
