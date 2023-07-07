@@ -12,10 +12,10 @@ cache=[]
 lat = String()
 lon = String()
 
-class KaboatGPSRTK(Node):
+class SnuboatGPSRTK(Node):
 
     def __init__(self):
-        super().__init__('kaboat_gps_rtk')
+        super().__init__('snuboat_gps_rtk')
         self.lat_publisher_ = self.create_publisher(String, '/gps/lat', 10)
         self.lon_publisher_ = self.create_publisher(String, '/gps/lon', 10)
         timer_period = 0.1  # seconds
@@ -48,14 +48,14 @@ class KaboatGPSRTK(Node):
 def main(args=None):
     rclpy.init(args=args)
 
-    kaboat_gps_rtk = KaboatGPSRTK()
+    snuboat_gps_rtk = SnuboatGPSRTK()
 
-    rclpy.spin(kaboat_gps_rtk)
+    rclpy.spin(snuboat_gps_rtk)
 
     # Destroy the node explicitly
     # (optional - otherwise it will be done automatically
     # when the garbage collector destroys the node object)
-    kaboat_gps_rtk.destroy_node()
+    snuboat_gps_rtk.destroy_node()
     rclpy.shutdown()
 
 

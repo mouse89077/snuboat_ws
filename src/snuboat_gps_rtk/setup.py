@@ -1,6 +1,6 @@
 from setuptools import find_packages, setup
 
-package_name = 'kaboat_gps_rtk'
+package_name = 'snuboat_gps_rtk'
 
 setup(
     name=package_name,
@@ -13,14 +13,14 @@ setup(
     ],
     install_requires=['setuptools'],
     zip_safe=True,
-    maintainer='kaboat',
+    maintainer='snuboat',
     maintainer_email='kaboat@todo.todo',
     description='TODO: Package description',
     license='TODO: License declaration',
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'kaboat_gps_rtk = kaboat_gps_rtk.kaboat_gps_rtk:main'
+            'snuboat_gps_rtk = snuboat_gps_rtk.snuboat_gps_rtk:main'
         ],
     },
 )
