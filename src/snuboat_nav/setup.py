@@ -26,7 +26,6 @@ setup(
         'obs = snuboat_nav.obstacle_avoidance:main',
         'pwm_cvt = snuboat_nav.pwm_converter:main',
         'diff = snuboat_nav.differentiater:main',
-
         ],
     },
 )

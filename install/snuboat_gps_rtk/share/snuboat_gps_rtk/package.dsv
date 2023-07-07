@@ -1,0 +1,6 @@
+source;share/snuboat_gps_rtk/hook/pythonpath.ps1
+source;share/snuboat_gps_rtk/hook/pythonpath.dsv
+source;share/snuboat_gps_rtk/hook/pythonpath.sh
+source;share/snuboat_gps_rtk/hook/ament_prefix_path.ps1
+source;share/snuboat_gps_rtk/hook/ament_prefix_path.dsv
+source;share/snuboat_gps_rtk/hook/ament_prefix_path.sh

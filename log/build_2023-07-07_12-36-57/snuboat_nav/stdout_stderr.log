@@ -1,0 +1,57 @@
+running egg_info
+creating ../../build/snuboat_nav/snuboat_nav.egg-info
+writing ../../build/snuboat_nav/snuboat_nav.egg-info/PKG-INFO
+writing dependency_links to ../../build/snuboat_nav/snuboat_nav.egg-info/dependency_links.txt
+writing entry points to ../../build/snuboat_nav/snuboat_nav.egg-info/entry_points.txt
+writing requirements to ../../build/snuboat_nav/snuboat_nav.egg-info/requires.txt
+writing top-level names to ../../build/snuboat_nav/snuboat_nav.egg-info/top_level.txt
+writing manifest file '../../build/snuboat_nav/snuboat_nav.egg-info/SOURCES.txt'
+reading manifest file '../../build/snuboat_nav/snuboat_nav.egg-info/SOURCES.txt'
+writing manifest file '../../build/snuboat_nav/snuboat_nav.egg-info/SOURCES.txt'
+running build
+running build_py
+creating /home/jiyoungseo/snuboat_ws/build/snuboat_nav/build
+creating /home/jiyoungseo/snuboat_ws/build/snuboat_nav/build/lib
+creating /home/jiyoungseo/snuboat_ws/build/snuboat_nav/build/lib/snuboat_nav
+copying snuboat_nav/lidar_converter.py -> /home/jiyoungseo/snuboat_ws/build/snuboat_nav/build/lib/snuboat_nav
+copying snuboat_nav/differentiater.py -> /home/jiyoungseo/snuboat_ws/build/snuboat_nav/build/lib/snuboat_nav
+copying snuboat_nav/__init__.py -> /home/jiyoungseo/snuboat_ws/build/snuboat_nav/build/lib/snuboat_nav
+copying snuboat_nav/dummy_gps_publisher.py -> /home/jiyoungseo/snuboat_ws/build/snuboat_nav/build/lib/snuboat_nav
+copying snuboat_nav/obstacle_avoidance.py -> /home/jiyoungseo/snuboat_ws/build/snuboat_nav/build/lib/snuboat_nav
+copying snuboat_nav/dummy_enu_publisher.py -> /home/jiyoungseo/snuboat_ws/build/snuboat_nav/build/lib/snuboat_nav
+copying snuboat_nav/gnss_converter.py -> /home/jiyoungseo/snuboat_ws/build/snuboat_nav/build/lib/snuboat_nav
+copying snuboat_nav/pwm_converter.py -> /home/jiyoungseo/snuboat_ws/build/snuboat_nav/build/lib/snuboat_nav
+copying snuboat_nav/dummy_des_publisher.py -> /home/jiyoungseo/snuboat_ws/build/snuboat_nav/build/lib/snuboat_nav
+running install
+running install_lib
+creating /home/jiyoungseo/snuboat_ws/install/snuboat_nav/lib/python3.10/site-packages/snuboat_nav
+copying /home/jiyoungseo/snuboat_ws/build/snuboat_nav/build/lib/snuboat_nav/lidar_converter.py -> /home/jiyoungseo/snuboat_ws/install/snuboat_nav/lib/python3.10/site-packages/snuboat_nav
+copying /home/jiyoungseo/snuboat_ws/build/snuboat_nav/build/lib/snuboat_nav/differentiater.py -> /home/jiyoungseo/snuboat_ws/install/snuboat_nav/lib/python3.10/site-packages/snuboat_nav
+copying /home/jiyoungseo/snuboat_ws/build/snuboat_nav/build/lib/snuboat_nav/__init__.py -> /home/jiyoungseo/snuboat_ws/install/snuboat_nav/lib/python3.10/site-packages/snuboat_nav
+copying /home/jiyoungseo/snuboat_ws/build/snuboat_nav/build/lib/snuboat_nav/dummy_gps_publisher.py -> /home/jiyoungseo/snuboat_ws/install/snuboat_nav/lib/python3.10/site-packages/snuboat_nav
+copying /home/jiyoungseo/snuboat_ws/build/snuboat_nav/build/lib/snuboat_nav/obstacle_avoidance.py -> /home/jiyoungseo/snuboat_ws/install/snuboat_nav/lib/python3.10/site-packages/snuboat_nav
+copying /home/jiyoungseo/snuboat_ws/build/snuboat_nav/build/lib/snuboat_nav/dummy_enu_publisher.py -> /home/jiyoungseo/snuboat_ws/install/snuboat_nav/lib/python3.10/site-packages/snuboat_nav
+copying /home/jiyoungseo/snuboat_ws/build/snuboat_nav/build/lib/snuboat_nav/gnss_converter.py -> /home/jiyoungseo/snuboat_ws/install/snuboat_nav/lib/python3.10/site-packages/snuboat_nav
+copying /home/jiyoungseo/snuboat_ws/build/snuboat_nav/build/lib/snuboat_nav/pwm_converter.py -> /home/jiyoungseo/snuboat_ws/install/snuboat_nav/lib/python3.10/site-packages/snuboat_nav
+copying /home/jiyoungseo/snuboat_ws/build/snuboat_nav/build/lib/snuboat_nav/dummy_des_publisher.py -> /home/jiyoungseo/snuboat_ws/install/snuboat_nav/lib/python3.10/site-packages/snuboat_nav
+byte-compiling /home/jiyoungseo/snuboat_ws/install/snuboat_nav/lib/python3.10/site-packages/snuboat_nav/lidar_converter.py to lidar_converter.cpython-310.pyc
+byte-compiling /home/jiyoungseo/snuboat_ws/install/snuboat_nav/lib/python3.10/site-packages/snuboat_nav/differentiater.py to differentiater.cpython-310.pyc
+byte-compiling /home/jiyoungseo/snuboat_ws/install/snuboat_nav/lib/python3.10/site-packages/snuboat_nav/__init__.py to __init__.cpython-310.pyc
+byte-compiling /home/jiyoungseo/snuboat_ws/install/snuboat_nav/lib/python3.10/site-packages/snuboat_nav/dummy_gps_publisher.py to dummy_gps_publisher.cpython-310.pyc
+byte-compiling /home/jiyoungseo/snuboat_ws/install/snuboat_nav/lib/python3.10/site-packages/snuboat_nav/obstacle_avoidance.py to obstacle_avoidance.cpython-310.pyc
+byte-compiling /home/jiyoungseo/snuboat_ws/install/snuboat_nav/lib/python3.10/site-packages/snuboat_nav/dummy_enu_publisher.py to dummy_enu_publisher.cpython-310.pyc
+byte-compiling /home/jiyoungseo/snuboat_ws/install/snuboat_nav/lib/python3.10/site-packages/snuboat_nav/gnss_converter.py to gnss_converter.cpython-310.pyc
+byte-compiling /home/jiyoungseo/snuboat_ws/install/snuboat_nav/lib/python3.10/site-packages/snuboat_nav/pwm_converter.py to pwm_converter.cpython-310.pyc
+byte-compiling /home/jiyoungseo/snuboat_ws/install/snuboat_nav/lib/python3.10/site-packages/snuboat_nav/dummy_des_publisher.py to dummy_des_publisher.cpython-310.pyc
+running install_data
+copying package.xml -> /home/jiyoungseo/snuboat_ws/install/snuboat_nav/share/snuboat_nav
+running install_egg_info
+Copying ../../build/snuboat_nav/snuboat_nav.egg-info to /home/jiyoungseo/snuboat_ws/install/snuboat_nav/lib/python3.10/site-packages/snuboat_nav-0.0.0-py3.10.egg-info
+running install_scripts
+Installing diff script to /home/jiyoungseo/snuboat_ws/install/snuboat_nav/lib/snuboat_navigation
+Installing dummy_enu_pub script to /home/jiyoungseo/snuboat_ws/install/snuboat_nav/lib/snuboat_navigation
+Installing gnss script to /home/jiyoungseo/snuboat_ws/install/snuboat_nav/lib/snuboat_navigation
+Installing lidar script to /home/jiyoungseo/snuboat_ws/install/snuboat_nav/lib/snuboat_navigation
+Installing obs script to /home/jiyoungseo/snuboat_ws/install/snuboat_nav/lib/snuboat_navigation
+Installing pwm_cvt script to /home/jiyoungseo/snuboat_ws/install/snuboat_nav/lib/snuboat_navigation
+writing list of installed files to '/home/jiyoungseo/snuboat_ws/build/snuboat_nav/install.log'

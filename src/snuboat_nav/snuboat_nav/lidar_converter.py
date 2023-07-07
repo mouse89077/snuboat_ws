@@ -6,6 +6,7 @@ from rclpy.node import Node
 from geometry_msgs.msg import Point
 from rclpy.qos import qos_profile_sensor_data
 from std_msgs.msg import Bool, Float64, Float64MultiArray
+from snuboat_msgs.msg import Obstacles
 from sensor_msgs import LaserScan
 import numpy as np
 from sklearn.cluster import DBSCAN
@@ -21,18 +22,14 @@ class Lidar_Converter(Node):
         self.dt = 0.1
         self.obstacle = [] 
         self.obstacles = []
-        self.cartesian_scan = [] # origin: boat
+        self.polar_scan = []
+        self.cart_scan = [] # origin: boat
         
         self.lidar_scan_sub = self.create_subscription(LaserScan, '/scan', self.lidar_scan_callback, qos_profile_sensor_data)
         
-        self.obstacles_pub = self.create_publisher(Float64MultiArray, '/obstacles', 1)
+        self.obstacles_pub = self.create_publisher(Obstacles, '/obstacles', 1)
         
         self.obstacles_timer = self.create_timer(self.dt, self.pub_obstacles)
-        
-        #publish => (labels, r, phi)
-        # [[labels, r1,phi1]
-        #  [label2, r2,phi2]]
-        self.polar_pub =np.empty((0,3),int)
 
         self.lidar_scan_received = False
         
@@ -51,45 +48,32 @@ class Lidar_Converter(Node):
     def lidar_scan_callback(self, msg):
         self.lidar_scan_received = True
         #temporary polar coord []
-        temp_polar = []
         phi = msg.angle_min # radians
         for r in msg.ranges:
             if msg.range_min <= r <= msg.range_max:
-                temp_polar = np.append(temp_polar,[[r,phi]],axis=0)
-                p = Point.polar_to_cartesian(r, phi)
-                self.cartesian_scan = np.append(self.cartesian_scan, p, axis = 0)
+                if len(self.polar_scan)==0:
+                    self.polar_scan = [r, phi]
+                    self.cart_scan = [r*np.cos(np.radians(phi)), r*np.sin(np.radians(phi))]
+                else:
+                    self.polar_scan = np.append(self.polar_scan, [[r,phi]],axis=0)
+                    self.cart_scan = np.append(self.cart_scan, [[r*np.cos(np.radians(phi)), r*np.sin(np.radians(phi))]], axis = 0)
             phi += msg.angle_increment
             
-        points = np.array(self.cartesian_scan)
+        points = np.array(self.cart_scan)
         scaler = StandardScaler()
         points_scaled = scaler.fit_transform(points)
         dbscan = DBSCAN(eps=0.5, min_samples=5)  # Adjust the parameters as per your data
         dbscan.fit(points_scaled)
         self.scan_labels = dbscan.labels_
         
-        # append label to polar coord
-        for i,coord in enumerate(temp_polar):
-            coord = np.insert(coord,0,self.scan_labels[i])
-            self.polar_pub = np.append(self.polar_pub,[coord],axis=0)
-        
     # publish obstacle sinfo
     def pub_obstacles(self):
-        self.obstacles = np.zeros((5,max(self.scan_labels)))
-        if max(self.scan_labels) != -1:
-            for i in range(max(self.scan_labels)):
-                idxs = np.where(self.scan_labels == i)[0]
-                self.obstacle = self.cartesian_scan[idxs, :]
-                self.obstacle = np.reshape(self.obstacle, (1, -1))
-                # [[label r phi x y]]
-                self.obstacle = np.insert(self.obstacle,0,self.polar_pub[i])
-                self.obstacles[i] = self.obstacle # => maybe error? 
-        
-        # else: self.obstacles = []
-            
-        obs = Float64MultiArray()
-        obs.data = self.obstacles
-        #polar_pub 추가
-
+        obs = Obstacles()
+        obs.labels.data = self.scan_labels
+        obs.r.data = np.transpose(self.polar_scan[:, 0])
+        obs.phi.data = np.transpose(self.polar_scan[:, 1])
+        obs.x.data = np.transpose(self.cart_scan[:, 0])
+        obs.y.data = np.transpose(self.cart_scan[:, 1])
         self.obstacles_pub.publish(obs)
         
 def main(args=None):

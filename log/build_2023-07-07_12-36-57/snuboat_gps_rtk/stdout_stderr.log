@@ -1,0 +1,35 @@
+running egg_info
+creating ../../build/snuboat_gps_rtk/snuboat_gps_rtk.egg-info
+writing ../../build/snuboat_gps_rtk/snuboat_gps_rtk.egg-info/PKG-INFO
+writing dependency_links to ../../build/snuboat_gps_rtk/snuboat_gps_rtk.egg-info/dependency_links.txt
+writing entry points to ../../build/snuboat_gps_rtk/snuboat_gps_rtk.egg-info/entry_points.txt
+writing requirements to ../../build/snuboat_gps_rtk/snuboat_gps_rtk.egg-info/requires.txt
+writing top-level names to ../../build/snuboat_gps_rtk/snuboat_gps_rtk.egg-info/top_level.txt
+writing manifest file '../../build/snuboat_gps_rtk/snuboat_gps_rtk.egg-info/SOURCES.txt'
+reading manifest file '../../build/snuboat_gps_rtk/snuboat_gps_rtk.egg-info/SOURCES.txt'
+writing manifest file '../../build/snuboat_gps_rtk/snuboat_gps_rtk.egg-info/SOURCES.txt'
+running build
+running build_py
+creating /home/jiyoungseo/snuboat_ws/build/snuboat_gps_rtk/build
+creating /home/jiyoungseo/snuboat_ws/build/snuboat_gps_rtk/build/lib
+creating /home/jiyoungseo/snuboat_ws/build/snuboat_gps_rtk/build/lib/snuboat_gps_rtk
+copying snuboat_gps_rtk/__init__.py -> /home/jiyoungseo/snuboat_ws/build/snuboat_gps_rtk/build/lib/snuboat_gps_rtk
+copying snuboat_gps_rtk/snuboat_gps_rtk.py -> /home/jiyoungseo/snuboat_ws/build/snuboat_gps_rtk/build/lib/snuboat_gps_rtk
+running install
+running install_lib
+creating /home/jiyoungseo/snuboat_ws/install/snuboat_gps_rtk/lib/python3.10/site-packages/snuboat_gps_rtk
+copying /home/jiyoungseo/snuboat_ws/build/snuboat_gps_rtk/build/lib/snuboat_gps_rtk/__init__.py -> /home/jiyoungseo/snuboat_ws/install/snuboat_gps_rtk/lib/python3.10/site-packages/snuboat_gps_rtk
+copying /home/jiyoungseo/snuboat_ws/build/snuboat_gps_rtk/build/lib/snuboat_gps_rtk/snuboat_gps_rtk.py -> /home/jiyoungseo/snuboat_ws/install/snuboat_gps_rtk/lib/python3.10/site-packages/snuboat_gps_rtk
+byte-compiling /home/jiyoungseo/snuboat_ws/install/snuboat_gps_rtk/lib/python3.10/site-packages/snuboat_gps_rtk/__init__.py to __init__.cpython-310.pyc
+byte-compiling /home/jiyoungseo/snuboat_ws/install/snuboat_gps_rtk/lib/python3.10/site-packages/snuboat_gps_rtk/snuboat_gps_rtk.py to snuboat_gps_rtk.cpython-310.pyc
+running install_data
+creating /home/jiyoungseo/snuboat_ws/install/snuboat_gps_rtk/share/ament_index
+creating /home/jiyoungseo/snuboat_ws/install/snuboat_gps_rtk/share/ament_index/resource_index
+creating /home/jiyoungseo/snuboat_ws/install/snuboat_gps_rtk/share/ament_index/resource_index/packages
+copying resource/snuboat_gps_rtk -> /home/jiyoungseo/snuboat_ws/install/snuboat_gps_rtk/share/ament_index/resource_index/packages
+copying package.xml -> /home/jiyoungseo/snuboat_ws/install/snuboat_gps_rtk/share/snuboat_gps_rtk
+running install_egg_info
+Copying ../../build/snuboat_gps_rtk/snuboat_gps_rtk.egg-info to /home/jiyoungseo/snuboat_ws/install/snuboat_gps_rtk/lib/python3.10/site-packages/snuboat_gps_rtk-0.0.0-py3.10.egg-info
+running install_scripts
+Installing snuboat_gps_rtk script to /home/jiyoungseo/snuboat_ws/install/snuboat_gps_rtk/lib/snuboat_gps_rtk
+writing list of installed files to '/home/jiyoungseo/snuboat_ws/build/snuboat_gps_rtk/install.log'
