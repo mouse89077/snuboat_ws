@@ -23,6 +23,7 @@ setup(
         'gnss = snuboat_nav.gnss_converter:main',
         'lidar = snuboat_nav.lidar_converter:main',
         'dummy_enu_pub=snuboat_nav.dummy_enu_publisher:main',
+        'dummy_gps_pub=snuboat_nav.dummy_gps_publisher:main',
         'obs = snuboat_nav.obstacle_avoidance:main',
         'pwm_cvt = snuboat_nav.pwm_converter:main',
         'diff = snuboat_nav.differentiater:main',

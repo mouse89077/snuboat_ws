@@ -102,6 +102,7 @@ class GNSSConverter(Node):
         #numpy float error!!
         enu_wp_set.data = temp_wp_set.tolist()
         self.enu_wp_set_pub.publish(enu_wp_set)
+        
 
 
 def main(args=None):
