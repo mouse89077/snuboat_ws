@@ -1,3 +1,0 @@
-[console_scripts]
-snuboat_gps_rtk = snuboat_gps_rtk.snuboat_gps_rtk:main
-
