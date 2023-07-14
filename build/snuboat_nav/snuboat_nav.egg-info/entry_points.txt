@@ -1,8 +1,0 @@
-[console_scripts]
-diff = snuboat_nav.differentiater:main
-dummy_enu_pub = snuboat_nav.dummy_enu_publisher:main
-gnss = snuboat_nav.gnss_converter:main
-lidar = snuboat_nav.lidar_converter:main
-obs = snuboat_nav.obstacle_avoidance:main
-pwm_cvt = snuboat_nav.pwm_converter:main
-
