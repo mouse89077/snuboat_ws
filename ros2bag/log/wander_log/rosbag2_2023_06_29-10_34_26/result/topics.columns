@@ -1,6 +1,0 @@
-"name","type","length","leftDigits","rightDigits"
-"id","INTEGER","1","1","0"
-"name","STRING","19","0","0"
-"type","STRING","38","0","0"
-"serialization_format","STRING","3","0","0"
-"offered_qos_profiles","STRING","812","0","0"
