@@ -72,7 +72,7 @@ class PWMConverter(Node):
         self.err_heading_sub = self.create_subscription(Float64, '/err_heading', self.err_heading_callback, 1)
         # self.OS_des_spd_sub =self.create_subscription(Float64, '/des_spd', self.OS_des_spd_callback, 1)
         # self.OS_heading_sub = self.create_subscription(FilterHeading, '/nav/heading', self.OS_heading_callback, 1)
-    #    self.spd_sub = self.create_subscription(TwistWithCovarianceStamped, '/fix_velocity', #self.spd_callback, 1)    
+        self.spd_sub = self.create_subscription(TwistWithCovarianceStamped, '/fix_velocity', self.spd_callback, 1)    
 
         self.pwm_pub =self.create_publisher(Int32, '/pwm', 1)
         
@@ -80,7 +80,7 @@ class PWMConverter(Node):
 
         self.wp_check = False
 
-        self.des_heading_received = False
+        self.err_heading_received = False
         self.OS_des_spd_received = False
         self.OS_heading_received = False
         self.OS_spd_received = False
@@ -90,15 +90,15 @@ class PWMConverter(Node):
         self.timer = self.create_timer(10.0, self.check_topic_status)
 
     def check_topic_status(self):
-        if not self.des_heading_received:
-            self.get_logger().info('No topic des_heading_received')
+        if not self.err_heading_received:
+            self.get_logger().info('No topic err_heading_received')
         if not self.OS_des_spd_received:
             self.get_logger().info('No topic OS_des_spd_received')
         if not self.OS_heading_received:
             self.get_logger().info('No topic OS_heading_received')
         if not self.OS_spd_received:
             self.get_logger().info('No topic OS_spd_received')
-        if self.des_heading_received and self.OS_des_spd_received and self.OS_heading_received and self.OS_spd_received:
+        if self.err_heading_received and self.OS_des_spd_received and self.OS_heading_received and self.OS_spd_received:
             self.get_logger().info('All topics received')
         else:
             self.get_logger().info('Waiting for topics to be published...')
@@ -198,14 +198,10 @@ class PWMConverter(Node):
         self.rudder_pwm = self.rudder_pwm[1:]
     
     def cal_self_rotate(self):
-        # if self.err_heading[-1] > 0:
-        #     self.rev_idx = 3 # turn left
-        # else: # self.err_heading[-1] < 0:
-        #     self.rev_idx = 4 # turn right
         if self.err_heading[-1] > 0:
-            self.rev_idx = 4 # turn right
-        else: # self.err_heading[-1] < 0:
             self.rev_idx = 3 # turn left
+        else: # self.err_heading[-1] < 0:
+            self.rev_idx = 4 # turn right
 
         thrust_pwm = 1500 + int(abs(self.err_heading[-1] * self.Kp_self_rot)) 
         self.thrust_pwm = np.append(self.thrust_pwm, thrust_pwm)
@@ -216,7 +212,7 @@ class PWMConverter(Node):
 def main(args=None):
     rclpy.init(args=args)
     pwm_converter = PWMConverter()
-    # pwm_converter.wait_for_topics()
+    pwm_converter.wait_for_topics()
     rclpy.spin(pwm_converter)
     pwm_converter.destroy_node()
     rclpy.shutdown()

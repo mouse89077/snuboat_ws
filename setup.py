@@ -25,9 +25,11 @@ setup(
         'dummy_enu_pub=snuboat_nav.dummy_enu_publisher:main',
         'dummy_gps_pub=snuboat_nav.dummy_gps_publisher:main',
         'obs = snuboat_nav.obstacle_avoidance:main',
+        'obs_rev=snuboat_nav.obstacle_avoidance_rev:main',
         'pwm_cvt = snuboat_nav.pwm_converter:main',
         'diff = snuboat_nav.differentiater:main',
-
+        'vis = snuboat_nav.visualizer_z:main',
+        'vis_lf = snuboat_nav.visualizer_lf:main',
         ],
     },
 )

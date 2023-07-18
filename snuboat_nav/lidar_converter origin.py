@@ -78,7 +78,6 @@ class Lidar_Converter(Node):
 
             print("label num", max(self.scan_labels) - min(self.scan_labels) + 1)
             # print(self.scan_labels)
-            # print("polar scan",self.polar_scan)
             
             self.scan_labels = np.array(self.scan_labels)
             self.polar_scan = np.array(self.polar_scan)  # Convert back to NumPy array
@@ -113,15 +112,14 @@ class Lidar_Converter(Node):
                 and len(obs_labels.data) - len(obs_y.data) == 0) :
                 return
             
-            
+            # obs_safe_phi = Float64MultiArray()
+            # obs_safe_phi.data = 
             self.obs_labels_pub.publish(obs_labels)
             self.obs_r_pub.publish(obs_r)
             self.obs_phi_pub.publish(obs_phi)
             self.obs_x_pub.publish(obs_x)
             self.obs_y_pub.publish(obs_y)
-            # obs_safe_phi = Float64MultiArray()
-            # obs_safe_phi.data = 
-            # self.obs_safe_phi_pub.publish(obs_safe_phi)
+            self.obs_safe_phi_pub.publish(obs_safe_phi)
             # print(len(self.scan_labels), len(obs_r.data), len(obs_x.data))
             
             # print(np.shape(self.polar_scan[:, 1]))

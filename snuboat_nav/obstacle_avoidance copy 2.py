@@ -71,7 +71,7 @@ class Obstacle_Avoidance(Node):
         #subscribe from gps 
         # self.spd_sub = self.create_subscription(String, "/spd", self.spd_callback, 1)
         self.spd_sub = self.create_subscription(
-            TwistWithCovarianceStamped, "/fix_velocity", self.spd_callback, 1
+            TwistWithCovarianceStamped, "/spd", self.spd_callback, 1
         )
         
         self.enu_wp_x_set_sub = self.create_subscription(
@@ -88,8 +88,6 @@ class Obstacle_Avoidance(Node):
         self.wp_check_pub = self.create_publisher(Bool,"/wp_check",1)
 
         self.des_pub = self.create_timer(self.dt, self.pub_des)
-        # self.des_pub = self.create_timer(1.0, self.pub_des)
-        # self.des_pub = self.create_timer(3.0, self.pub_des)
         
         self.obs_labels_received = False
         self.obs_r_received = False
@@ -112,7 +110,7 @@ class Obstacle_Avoidance(Node):
 
         self.wp_reach_check = False
         self.wp_time_cnt = 0
-        self.goal_tol = 3.0
+        self.goal_tol = 1.5
         self.wp_state = False
         self.wp_stay_time = 30
 
@@ -132,11 +130,9 @@ class Obstacle_Avoidance(Node):
         self.obs_y=[]
         self.enu_wp_x_set=[]
         self.enu_wp_y_set=[]
-        #margin
-        self.inflate_obs_phi = np.deg2rad(20)
 
     def wait_for_topics(self):
-        self.timer = self.create_timer(10.0, self.check_topic_status)
+        self.check_topic_status()
         # self.togodist()
 
     def check_topic_status(self):
@@ -158,12 +154,6 @@ class Obstacle_Avoidance(Node):
             self.get_logger().info("All topics received")
         else:
             self.get_logger().info("Waiting for topics to be published")
-        # print("this is test")
-        # print("cur_wp_idx", self.cur_wp_idx, \
-        #       "To go:", self.print_dist, \
-        #     "des_heading", np.rad2deg(self.des_heading[-1]), \
-        #       "des_spd", self.des_spd[-1],\
-        #       "wp_check",self.wp_reach_check)
 
     # def togodist(self):
     #     dist = np.linalg.norm([self.enu_pos[-1, 0] - self.enu_wp_x_set[self.cur_wp_idx], self.enu_pos[-1, 1] - self.enu_wp_y_set[self.cur_wp_idx]])
@@ -218,16 +208,11 @@ class Obstacle_Avoidance(Node):
         self.enu_wp_y_set = temp_set_y.flatten()
         # self.enu_wp_set = np.append(self.enu_wp_x_set, self.enu_wp_y_set, axis=0)
         # self.enu_wp_set = np.transpose(self.enu_wp_set)
-        self.print_dist = np.linalg.norm([self.enu_pos[-1, 0] - self.enu_wp_x_set[self.cur_wp_idx], self.enu_pos[-1, 1] - self.enu_wp_y_set[self.cur_wp_idx]])
-        print("this is distance to wp")
-        print(self.print_dist)
-        self.wp_reach_check = bool(
-            self.print_dist < self.goal_tol
+        dist = np.linalg.norm([self.enu_pos[-1, 0] - self.enu_wp_x_set[self.cur_wp_idx], self.enu_pos[-1, 1] - self.enu_wp_y_set[self.cur_wp_idx]])
+        self.get_logger().info('To go dist: ' + str(dist))
+        self.wp_reach_check = (
+            dist < self.goal_tol
         )
-        print("this is my pos")
-        print(self.enu_pos[-1,:])
-        print("this is my waypoint")
-        print(self.enu_wp_x_set[self.cur_wp_idx],self.enu_wp_y_set[self.cur_wp_idx])
         if self.wp_reach_check == True:
             if self.wp_state == False:
                 self.get_logger().info("Changing waypoint ...")
@@ -247,7 +232,7 @@ class Obstacle_Avoidance(Node):
         if self.cur_wp_idx >= len(self.enu_wp_x_set):
             self.get_logger().info("Waypoint Mission Clear")
             return
-    #rad
+
     def heading_callback(self, msg):
         self.heading_received = True
         # print(self.heading_received)
@@ -256,6 +241,8 @@ class Obstacle_Avoidance(Node):
 
     def spd_callback(self, msg):
         self.spd_received = True
+        # print(self.spd_received)
+        # self.spd = np.append(self.spd, float(msg.data))
         u = msg.twist.twist.linear.x
         v = msg.twist.twist.linear.y
         vel = np.array([u, v])
@@ -277,11 +264,6 @@ class Obstacle_Avoidance(Node):
             and self.obs_y_received
             and self.enu_wp_x_received
         ):  # all topic received
-            # print("all topic received now, obs info check")
-            # print("obs - label")
-            # print(len(self.obs_labels))
-            # print("obs x")
-            # print(len(self.obs_x))
             # obs information not matched
             if len(self.obs_labels) == len(self.obs_r) \
                 and len(self.obs_labels) == len(self.obs_phi) \
@@ -296,18 +278,7 @@ class Obstacle_Avoidance(Node):
 
             return
             
-        err_heading = self.ref_heading - self.heading[-1]
-        if err_heading > np.pi:
-            err_heading -= 2*np.pi
-        elif err_heading < -np.pi:
-            err_heading += 2*np.pi
-
-        print("cur_wp_idx", self.cur_wp_idx, \
-              "des_heading", np.rad2deg(self.des_heading[-1]), \
-              "heading", np.rad2deg(self.heading[-1]), \
-              "err_heading", np.ceil(np.rad2deg(err_heading)), \
-              "des_spd", self.des_spd[-1],\
-              "wp_check", self.wp_reach_check)
+        print("cur_wp_idx", self.cur_wp_idx, "err_heading", self.des_heading[-1] - self.heading[-1], "des_spd", self.des_spd[-1],"wp_check",self.wp_reach_check)
 
         des_heading = Float64()
         des_heading.data = self.des_heading[-1]
@@ -326,13 +297,11 @@ class Obstacle_Avoidance(Node):
         self.wp_check_pub.publish(wp_check)
 
     def cal_des(self):
-        cur_pos = self.enu_pos[-1, :]
         if self.wp_reach_check == True and self.wp_time_cnt < self.wp_stay_time:
             # print(1)
             self.des_spd = np.append(self.des_spd, 0)
             self.des_spd = self.des_spd[1:]
             des_heading = np.arctan2(self.enu_wp_y_set[self.cur_wp_idx] - cur_pos[1], self.enu_wp_x_set[self.cur_wp_idx] - cur_pos[0])
-
             self.des_heading = np.append(self.des_heading, des_heading)
             self.des_heading = self.des_heading[1:]
             self.wp_time_cnt += 1
@@ -345,128 +314,80 @@ class Obstacle_Avoidance(Node):
                 return
         else:  # self.wp_state = False:
             # print("3")
-            
-
+            cur_pos = self.enu_pos[-1, :]
+            # print(cur_pos)
+            # wp ref heading
+            # print(self.cur_wp_idx)
+            # print(self.enu_wp_y_set)
+            # print(self.enu_wp_y_set[self.cur_wp_idx])
+            # print(self.enu_wp_y_set[self.cur_wp_idx] - cur_pos[1])
             self.ref_heading = np.arctan2(self.enu_wp_y_set[self.cur_wp_idx] - cur_pos[1], self.enu_wp_x_set[self.cur_wp_idx] - cur_pos[0])
-            print("this is ref heading")
-            print(np.rad2deg(self.ref_heading))
+            # print(self.ref_heading)           
             #### calculate des_heading and des_spd
-            if len(self.obs_labels) != 0: # if there are scanned obstacles
-                self.danger_r = []
-                self.danger_phi = []
-                self.danger_x = []
-                self.danger_y = []
-                self.safe_phi = np.linspace(-np.pi, np.pi, 360).transpose()
-                # print(np.shape(self.safe_phi))
-
+            if len(self.obs_labels) != 0:
+                self.danger_heading = []
                 self.safe_heading = []
+                self.heading_cost = []
 
-                # safe_phi
-                # idx_array = np.where(np.diff(self.obs_labels) != 0)[0] + 1
-                idx_array = np.where(np.diff(self.obs_labels) != 0)[0]
-                print(len(idx_array))
-                # print(idx_array)
-                for i, idx in enumerate(idx_array):
+                # if len(self.obs_labels) - len(self.obs_r) != 0:
+                #     print("ERROR_r")
+                # if len(self.obs_labels) - len(self.obs_phi) != 0:
+                #     print("ERROR_phi")
+                # if len(self.obs_labels) - len(self.obs_x) != 0:
+                #     print("ERROR_x")
+                # if len(self.obs_labels) - len(self.obs_y) != 0:
+                #     print("ERROR_y")
+                #     return
+                # if len(self.obs_labels) - len(self.obs_r) == 0 \
+                #     and len(self.obs_labels) - len(self.obs_x) == 0 \
+                #     and len(self.obs_labels) - len(self.obs_y) == 0 \
+                #     and len(self.obs_labels) - len(self.obs_phi) == 0 :
+                #       print("GODD")
 
-                    if idx != idx_array[-1]:
-                        # prisnt(len(self.obs_r[idx:idx_array[i+1]-1]))
-                        if len(self.obs_r[idx:idx_array[i+1]-1]) > 10:
-                            # print(self.obs_r[idx:idx_array[i+1]-1])
-                            # print("this is minimum value")
-                            # print(np.min(self.obs_r[idx:idx_array[i+1]-1]) )
-                            if np.min(self.obs_r[idx:idx_array[i+1]-1]) < self.safe_radius:
-                            
-                                if self.obs_phi[idx] - self.inflate_obs_phi > -np.pi:
-                                    start_phi = self.obs_phi[idx] - self.inflate_obs_phi
-                                else:
-                                    start_phi = -np.pi
-
-                                if self.obs_phi[idx_array[i+1]-1] + self.inflate_obs_phi < np.pi:
-                                    end_phi = self.obs_phi[idx_array[i+1]-1] + self.inflate_obs_phi
-                                else:
-                                    end_phi = np.pi
-
-                                # print(start_phi, end_phi)
-                                temp_safe_phi1 = self.safe_phi
-                                safe_idx1 = np.array(temp_safe_phi1 < start_phi)
-                                temp_safe_phi1 = temp_safe_phi1[safe_idx1]
-                                temp_safe_phi1 = np.reshape(temp_safe_phi1, (1, -1))
-                                # print(temp_safe_phi1)
-                                temp_safe_phi2 = self.safe_phi
-                                safe_idx2 = np.array(temp_safe_phi2 > end_phi)
-                                temp_safe_phi2= temp_safe_phi2[safe_idx2]
-                                temp_safe_phi2 = np.reshape(temp_safe_phi2, (1, -1))
-                                # print(temp_safe_phi2)
-                                self.safe_phi = np.append(temp_safe_phi1, temp_safe_phi2)
-                                # print(self.safe_phi)
+                for idx, label in enumerate(self.obs_labels):
+                    #danger obs
+                    if self.obs_r[idx] < self.safe_radius:
                         
+                        danger_heading = self.obs_phi[idx] + self.heading[-1]
+                        if danger_heading > np.pi:
+                            danger_heading -= 2*np.pi
+                        elif danger_heading < -np.pi:
+                            danger_heading += 2*np.pi
+                            
+                        self.danger_heading = np.append(
+                            self.danger_heading, danger_heading
+                        )
+                        continue
+                    #safe obs
                     else:
-                        if len(self.obs_r[idx:]) > 10:
-                            if np.min(self.obs_r[idx:]) < self.safe_radius:
-
-                                if self.obs_phi[idx] - self.inflate_obs_phi > -np.pi:
-                                    start_phi = self.obs_phi[idx] - self.inflate_obs_phi
-                                else:
-                                    start_phi = -np.pi
-
-                                if self.obs_phi[-1] + self.inflate_obs_phi < np.pi:
-                                    end_phi = self.obs_phi[-1] + self.inflate_obs_phi
-                                else:
-                                    end_phi = np.pi
-
-                                # print(start_phi, end_phi)
-                                temp_safe_phi1 = self.safe_phi
-                                safe_idx1 = np.array(temp_safe_phi1 < start_phi)
-                                temp_safe_phi1 = temp_safe_phi1[safe_idx1]
-                                temp_safe_phi1 = np.reshape(temp_safe_phi1, (1, -1))
-                                # print(temp_safe_phi1)
-                                temp_safe_phi2 = self.safe_phi
-                                safe_idx2 = np.array(temp_safe_phi2 > end_phi)
-                                temp_safe_phi2= temp_safe_phi2[safe_idx2]
-                                temp_safe_phi2 = np.reshape(temp_safe_phi2, (1, -1))
-                                # print(temp_safe_phi2)
-                                self.safe_phi = np.append(temp_safe_phi1, temp_safe_phi2)
-                                # print(self.safe_phi)
-
-                # print(len(self.safe_phi))   
-
-                self.safe_heading = self.safe_phi + self.heading[-1]
-                minus_idx = self.safe_heading > np.pi
-                self.safe_heading[minus_idx] -= 2*np.pi
-                plus_idx = self.safe_heading < -np.pi
-                self.safe_heading[plus_idx] += 2*np.pi
-                # print(np.rad2deg(self.safe_heading))
-
-                future_cost = self.safe_heading - self.ref_heading
-                future_minus_idx = future_cost > np.pi
-                future_cost[future_minus_idx] -= 2*np.pi
-                future_plus_idx = future_cost < -np.pi
-                future_cost[future_plus_idx] += 2*np.pi
-
-                past_cost = self.safe_heading - self.des_heading[-1]
-                past_minus_idx = past_cost > np.pi
-                past_cost[past_minus_idx] -= 2*np.pi
-                past_plus_idx = past_cost < -np.pi
-                past_cost[past_plus_idx] += 2*np.pi
-
-                self.heading_cost = abs(future_cost) + 0.2 * abs(past_cost)
-                # print(self.heading_cost)
-                # print(np.rad2deg(self.heading_cost))
-
-                # calculate des_heading
-                self.des_spd = np.append(self.des_spd, self.ref_spd)
-                self.des_spd = self.des_spd[1:]
-
+                        safe_heading = self.obs_phi[idx] + self.heading[-1]
+                        if safe_heading > np.pi:
+                            safe_heading -= 2*np.pi
+                        elif safe_heading < -np.pi:
+                            safe_heading += 2*np.pi
+                        # print(safe_heading)
+                        # print(self.ref_heading)
+                        heading_cost = abs(safe_heading - self.ref_heading)
+                        if heading_cost > np.pi:
+                            heading_cost -= 2*np.pi
+                        elif heading_cost < -np.pi:
+                            heading_cost += 2*np.pi
+                            
+                        self.safe_heading = np.append(self.safe_heading, safe_heading)
+                        self.heading_cost = np.append(self.heading_cost, heading_cost)
+                        
                 if len(self.safe_heading) != 0:
                     des_heading_idx = np.argmin(self.heading_cost)
                     des_heading = self.safe_heading[des_heading_idx]
-                    
+
+                    self.des_spd = np.append(self.des_spd, self.ref_spd)
+                    self.des_spd = self.des_spd[1:]
                     self.des_heading = np.append(self.des_heading, des_heading)
                     self.des_heading = self.des_heading[1:]
                 else:
                     return
-
-            else: # if there are no scanned obstacles
+                
+            else:
                 self.des_spd = np.append(self.des_spd, self.des_spd[-1])
                 self.des_spd = self.des_spd[1:]
                 self.des_heading = np.append(self.des_heading, self.des_heading[-1])

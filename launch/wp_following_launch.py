@@ -22,12 +22,12 @@ def generate_launch_description():
             executable='wp_following',
             output='screen',
             emulate_tty=True,
-            name='WP_Following
+            name='WP_Following',
             parameters = [
                 {'namespace' : namespace},
             	{'navigator_frequency' : navigator_frequency},
                 {'imu_frequency' : imu_frequency},
-                {'gps_frequency' : gps_frequency}.
+                {'gps_frequency' : gps_frequency},
                 {'WP_tol' : WP_tol},
                 {'Kp_pwm' : Kp_pwm},
                 {'Kd_pwm' : Kd_pwm},
