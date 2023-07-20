@@ -272,7 +272,6 @@ class Obstacle_Avoidance(Node):
 
             if self.wp_reach_check == True:
                 if self.wp_state == False:
-                    self.get_logger().info("Changing waypoint ...")
                     self.wp_state = True
                 else:  # self.wp_state = True
                     if self.wp_time_cnt < self.wp_stay_time:
@@ -281,6 +280,7 @@ class Obstacle_Avoidance(Node):
                     else:  # self.wp_time_cnt > self.wp_stay_time
                         self.wp_state = False
                         self.wp_time_cnt = 0
+                        self.get_logger().info("Changing waypoint ...")
                         self.cur_wp_idx += 1
             else:  # wp_reach_check == False:
                 self.wp_state = False
