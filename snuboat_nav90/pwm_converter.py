@@ -26,7 +26,12 @@ class PWMConverter(Node):
             'Kd_rudder' : 0.1,
             'Kp_self_rot' : 1.0,
             'Kd_self_rot' : 1.0,
-            'Kp_DP_x' : 
+            'Kp_DP_x' : 150.0, 
+            'Kd_DP_x' : 10.0, 
+            'Kp_DP_y' : 100.0, 
+            'Kd_DP_y' : 6.0,
+            'Kp_DP_hdg' : 150.0,
+            'Kd_DP_hdg' : 10.0,
         }
         #params setting
         self.rudder_lim = self.declare_parameter("rudder_lim", default_params['rudder_lim']).value
@@ -39,6 +44,13 @@ class PWMConverter(Node):
         self.Kd_rudder = self.declare_parameter("Kd_rudder", default_params['Kd_rudder']).value
         self.Kp_self_rot = self.declare_parameter("Kp_self_rot", default_params['Kp_self_rot']).value
         self.Kd_self_rot = self.declare_parameter("Kd_self_rot", default_params['Kd_self_rot']).value
+        self.Kp_DP_x = self.declare_parameter("Kp_DP_x", default_params['Kp_DP_x']).value
+        self.Kd_DP_x = self.declare_parameter("Kd_DP_x", default_params['Kd_DP_x']).value
+        self.Kp_DP_y = self.declare_parameter("Kp_DP_y", default_params['Kp_DP_y']).value
+        self.Kd_DP_y = self.declare_parameter("Kd_DP_y", default_params['Kd_DP_y']).value
+        self.Kp_DP_hdg = self.declare_parameter("Kp_DP_hdg", default_params['Kp_DP_hdg']).value
+        self.Kd_DP_hdg = self.declare_parameter("Kp_DP_hdg", default_params['Kd_DP_hdg']).value
+
         
         #initialize          
         self.des_heading = np.zeros(10) # [rad]
