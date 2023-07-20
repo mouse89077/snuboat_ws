@@ -80,7 +80,8 @@ class PWMConverter(Node):
 
         self.pwm_pub =self.create_publisher(Int64, '/pwm', 1)
         
-        self.pwm_timer = self.create_timer(self.dt, self.pub_pwm)
+        # self.pwm_timer = self.create_timer(self.dt, self.pub_pwm)
+        self.pwm_timer = self.create_timer(2, self.pub_pwm)
 
         self.wp_check = False
 
