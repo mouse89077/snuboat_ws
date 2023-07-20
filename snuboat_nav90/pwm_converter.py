@@ -26,6 +26,7 @@ class PWMConverter(Node):
             'Kd_rudder' : 0.1,
             'Kp_self_rot' : 1.0,
             'Kd_self_rot' : 1.0,
+            'Kp_DP_x' : 
         }
         #params setting
         self.rudder_lim = self.declare_parameter("rudder_lim", default_params['rudder_lim']).value
@@ -171,9 +172,9 @@ class PWMConverter(Node):
 
     def allocate_thrust(self):
         # Calculate Required Forces 
-        Xreq = self.err_x[-1] * K_DP_x_p + (self.err_x[-1] - self.err_x[-2]) * K_DP_x_d
-        Yreq = self.err_y[-1] * K_DP_y_p + (self.err_y[-1] - self.err_y[-2]) * K_DP_y_d
-        Nreq = self.err_heading[-1] * K_DP_hdg_p + (self.err_heading[-1] - self.err_heading[-2]) * K_DP_hdg_d
+        Xreq = self.err_x[-1] * Kp_DP_x + (self.err_x[-1] - self.err_x[-2]) * Kd_DP_x
+        Yreq = self.err_y[-1] * Kp_DP_y + (self.err_y[-1] - self.err_y[-2]) * Kd_DP_y
+        Nreq = self.err_heading[-1] * Kp_DP_hdg + (self.err_heading[-1] - self.err_heading[-2]) * Kd_DP_hdg
 
         # Allocate thrust
         Config_Mat = np.array([[2, 0, 0, 0, 1, 0, -ly], \
