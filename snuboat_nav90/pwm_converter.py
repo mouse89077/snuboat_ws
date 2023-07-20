@@ -32,6 +32,8 @@ class PWMConverter(Node):
             'Kd_DP_y' : 6.0,
             'Kp_DP_hdg' : 150.0,
             'Kd_DP_hdg' : 10.0,
+            'lx' : 0.45,
+            'ly' : 0.07,
         }
         #params setting
         self.rudder_lim = self.declare_parameter("rudder_lim", default_params['rudder_lim']).value
@@ -50,7 +52,8 @@ class PWMConverter(Node):
         self.Kd_DP_y = self.declare_parameter("Kd_DP_y", default_params['Kd_DP_y']).value
         self.Kp_DP_hdg = self.declare_parameter("Kp_DP_hdg", default_params['Kp_DP_hdg']).value
         self.Kd_DP_hdg = self.declare_parameter("Kp_DP_hdg", default_params['Kd_DP_hdg']).value
-
+        self.lx = self.declare_parameter("lx", default_params['lx']).value
+        self.ly = self.declare_parameter("ly", default_params['ly']).value
         
         #initialize          
         self.des_heading = np.zeros(10) # [rad]
@@ -190,13 +193,13 @@ class PWMConverter(Node):
         Nreq = self.err_heading[-1] * Kp_DP_hdg + (self.err_heading[-1] - self.err_heading[-2]) * Kd_DP_hdg
 
         # Allocate thrust
-        Config_Mat = np.array([[2, 0, 0, 0, 1, 0, -ly], \
-                               [0, 2, 0, 0, 1, 0, ly], \
-                               [0, 0, 2, 0, 0, 1, -lx], \
-                               [0, 0, 0, 2, 0, 1, -lx], \
+        Config_Mat = np.array([[2, 0, 0, 0, 1, 0, -self.ly], \
+                               [0, 2, 0, 0, 1, 0, self.ly], \
+                               [0, 0, 2, 0, 0, 1, -self.lx], \
+                               [0, 0, 0, 2, 0, 1, -self.lx], \
                                [1, 1, 0, 0, 0, 0, 0], \
                                [0, 0, 1, 1, 0, 0, 0], \
-                               [-ly, ly, -lx, -lx, 0, 0, 0]])
+                               [-self.ly, self.ly, -self.lx, -self.lx, 0, 0, 0]])
 
         Req_Force_Vec = np.array([0, 0, 0, 0, Xreq, Yreq, Nreq]).transpose()
         temp = np.linalg.inv(Config_Mat) * Req_Force_Vec
