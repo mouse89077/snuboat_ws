@@ -53,9 +53,14 @@ class PWMConverter(Node):
         self.rudder_pwm_L = np.zeros(10)
         self.rudder_pwm_R = np.zeros(10)
 
+        self.err_x = np.zeros(10)
+        self.err_y = np.zeros(10)
+        
         self.wp_check_sub = self.create_subscription(Bool, '/wp_check', self.wp_check_callback, 1)
 
         self.err_heading_sub = self.create_subscription(Float64, '/err_heading', self.err_heading_callback, 1)
+        self.err_x_sub = self.create_subscription(Float64, '/err_x', self.err_x_callback, 1)
+        self.err_y_sub = self.create_subscription(Float64, '/err_y', self.err_y_callback, 1)
         # self.OS_des_spd_sub =self.create_subscription(Float64, '/des_spd', self.OS_des_spd_callback, 1)
         # self.OS_heading_sub = self.create_subscription(FilterHeading, '/nav/heading', self.OS_heading_callback, 1)
     #    self.spd_sub = self.create_subscription(TwistWithCovarianceStamped, '/fix_velocity', #self.spd_callback, 1)    
@@ -71,6 +76,10 @@ class PWMConverter(Node):
         self.heading_received = False
         self.spd_received = False
         self.wp_check_received = False
+
+        self.err_heading_received = False
+        self.err_x_received = False
+        self.err_y_received = False
 
     def wait_for_topics(self):
         self.timer = self.create_timer(10.0, self.check_topic_status)
@@ -95,6 +104,16 @@ class PWMConverter(Node):
         self.err_heading = np.append(self.err_heading, np.rad2deg(msg.data))
         self.err_heading = self.err_heading[1:]
 
+    def err_x_callback(self, msg):
+        self.err_x_received = True
+        self.err_x = np.append(self.err_x, msg.data)
+        self.err_x = self.err_x[1:]
+
+    def err_y_callback(self, msg):
+        self.err_y_received = True
+        self.err_y = np.append(self.err_y, msg.data)
+        self.err_y = self.err_y[1:]
+
     def wp_check_callback(self, msg):
         self.wp_check_received = True
         self.wp_check = msg.data
@@ -105,7 +124,8 @@ class PWMConverter(Node):
             self.cal_thrust_pwm()
             # self.cal_rudder_pwm()
         else:
-            self.cal_self_rotate()
+            # self.cal_self_rotate()
+            self.allocate_thrust()
 
         thrust_pwm_str_L = str(int(self.thrust_pwm_L[-1])).zfill(4)
         thrust_pwm_str_R = str(int(self.thrust_pwm_R[-1])).zfill(4)
@@ -137,6 +157,41 @@ class PWMConverter(Node):
         self.rudder_pwm_R = self.rudder_pwm_R[1:]
     
     def cal_self_rotate(self):
+        thrust_pwm_L = 1500 + int((self.err_heading[-1] * self.Kp_self_rot)) # TODO: define the sign!
+        thrust_pwm_R = 1500 - int((self.err_heading[-1] * self.Kp_self_rot)) # TODO: define the sign!
+        self.thrust_pwm_L = np.append(self.thrust_pwm_L, thrust_pwm_L)
+        self.thrust_pwm_L = self.thrust_pwm_L[1:]
+        self.thrust_pwm_R = np.append(self.thrust_pwm_R, thrust_pwm_R)
+        self.thrust_pwm_R = self.thrust_pwm_R[1:]
+
+        self.rudder_pwm_L = np.append(self.rudder_pwm_L, 1500)
+        self.rudder_pwm_L = self.rudder_pwm_L[1:]
+        self.rudder_pwm_R = np.append(self.rudder_pwm_R, 1500)
+        self.rudder_pwm_R = self.rudder_pwm_R[1:]
+
+    def allocate_thrust(self):
+        # Calculate Required Forces 
+        Xreq = self.err_x[-1] * K_DP_x_p + (self.err_x[-1] - self.err_x[-2]) * K_DP_x_d
+        Yreq = self.err_y[-1] * K_DP_y_p + (self.err_y[-1] - self.err_y[-2]) * K_DP_y_d
+        Nreq = self.err_heading[-1] * K_DP_hdg_p + (self.err_heading[-1] - self.err_heading[-2]) * K_DP_hdg_d
+
+        # Allocate thrust
+        Config_Mat = np.array([[2, 0, 0, 0, 1, 0, -ly], \
+                               [0, 2, 0, 0, 1, 0, ly], \
+                               [0, 0, 2, 0, 0, 1, -lx], \
+                               [0, 0, 0, 2, 0, 1, -lx], \
+                               [1, 1, 0, 0, 0, 0, 0], \
+                               [0, 0, 1, 1, 0, 0, 0], \
+                               [-ly, ly, -lx, -lx, 0, 0, 0]])
+
+        Req_Force_Vec = np.array([0, 0, 0, 0, Xreq, Yreq, Nreq]).transpose()
+        temp = np.linalg.inv(Config_Mat) * Req_Force_Vec
+        Thrust_L = np.linalg.norm([temp[0], temp[1])
+        Thrust_R = np.linalg.norm([temp[2], temp[3])
+        Servo_L = np.rad2deg(np.arctan2(temp[1], temp[0]))
+        Servo_R = np.rad2deg(np.arctan2(temp[3], temp[2]))
+        
+        # Map pwm 
         thrust_pwm_L = 1500 + int((self.err_heading[-1] * self.Kp_self_rot)) # TODO: define the sign!
         thrust_pwm_R = 1500 - int((self.err_heading[-1] * self.Kp_self_rot)) # TODO: define the sign!
         self.thrust_pwm_L = np.append(self.thrust_pwm_L, thrust_pwm_L)
